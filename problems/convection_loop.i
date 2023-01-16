@@ -1,15 +1,15 @@
-# material properties
-mu = 1
-rho_fluid = 1
-rho_solid = 5
-alpha = 20
-k_fluid = .01
-k_solid = 1.0
-cp_fluid = 1
-cp_solid = 1
+# material properties assuming solid = UO2, fluid = He @ stp
+mu = 1.96e-5
+rho_fluid = 0.178e-4
+rho_solid = 10.97
+alpha = 20 # natural convection coefficient, tbd
+k_fluid = .02
+k_solid = 10.2
+cp_fluid = 5.193
+cp_solid = 300
 T_cold = 0
-h_interface = 25
-q_vol = 10.0
+h_interface = 25 # convection coefficient at solid/fluid interface, tbd
+q_vol = 1e2
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -37,10 +37,13 @@ advected_interp_method = 'average'
     type = CartesianMeshGenerator
     dim = 2
     dx = '0.1 0.9'
-    dy = 1
+    dy = '0.1 0.8 0.1'
     ix = '3 27'
-    iy = 30
-    subdomain_id = '0 1'
+    iy = '3 24 3'
+    subdomain_id = '1 1
+                    0 1
+                    1 1
+                    '
   []
   [interface]
     # Define interface between solid and fluid surfaces as where blocks 0 and 1 meet
@@ -297,6 +300,32 @@ advected_interp_method = 'average'
     function = 0
   []
 
+  #[reflective_x]
+  #  type = INSFVSymmetryVelocityBC
+  #  variable = vel_x
+  #  boundary = 'left'
+  #  momentum_component = 'x'
+  #  mu = ${mu}
+  #  u = vel_x
+  #  v = vel_y
+  #[]
+
+  #[reflective_y]
+  #  type = INSFVSymmetryVelocityBC
+  #  variable = vel_y
+  #  boundary = 'left'
+  #  momentum_component = 'y'
+  #  mu = ${mu}
+  #  u = vel_x
+  #  v = vel_y
+  #[]
+
+  #[reflective_p]
+  #  type = INSFVSymmetryPressureBC
+  #  boundary = 'left'
+  #  variable = pressure
+  #[]
+
   [T_reflective]
     # symmetric problem
     type = FVNeumannBC
@@ -360,14 +389,14 @@ advected_interp_method = 'average'
 
 [Executioner]
   type = Transient
-  end_time = 25
-  dt = 1
+  end_time = 86400
+  dt = 1500
   solve_type = 'NEWTON'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'
   petsc_options_value = 'lu NONZERO 1.0'
   line_search = none
-  nl_rel_tol = 1e-12
-  nl_abs_tol = 1e-12
+  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-10
 []
 
 [Outputs]
