@@ -1,15 +1,17 @@
-# material properties assuming solid = UO2, fluid = He @ stp
-mu = 1.96e-5
-rho_fluid = 0.178e-4
-rho_solid = 10.97
-alpha = 20 # natural convection coefficient, tbd
-k_fluid = .02
-k_solid = 10.2
-cp_fluid = 5.193
-cp_solid = 300
-T_cold = 0
-h_interface = 25 # convection coefficient at solid/fluid interface, tbd
-q_vol = 1e2
+#####################################################################
+# material properties assuming solid = UO2, fluid = He @ STP
+#####################################################################
+mu = '${units 1.96e-5 Pa*s}'
+rho_fluid = '${units 1.78e-4 g/cm^3}' # -> kg/m^3}'
+rho_solid = '${units 10.97 g/cm^3}' # -> kg/m^3}'
+alpha = '${units 20 K^(-1)}' # natural convection coefficient, tbd
+k_fluid = '${units 0.02 W/(m*K)}'
+k_solid = '${units 10.2 W/(m*K)}'
+cp_fluid = '${units 5.193 J/(kg*K)}'
+cp_solid = '${units 300 J/(kg*K)}'
+T_cold = '${units 0 K}'
+h_interface = '${units 25 W/(m^2*K)}' # convection coefficient at solid/fluid interface, tbd
+q_vol = '${units 1e1 W/m^3}'
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -31,7 +33,7 @@ advected_interp_method = 'average'
 []
 
 [Mesh]
-  [gen]
+  [cmg]
     # Leftmost portion of mesh is block 0, rest is block 1
     # Block 0 is be solid heat source (spent fuel), block 1 is gasseous coolant
     type = CartesianMeshGenerator
@@ -39,7 +41,7 @@ advected_interp_method = 'average'
     dx = '0.1 0.9'
     dy = '0.1 0.8 0.1'
     ix = '3 27'
-    iy = '3 24 3'
+    iy = '3 24 27'
     subdomain_id = '1 1
                     0 1
                     1 1
@@ -48,10 +50,22 @@ advected_interp_method = 'average'
   [interface]
     # Define interface between solid and fluid surfaces as where blocks 0 and 1 meet
     type = SideSetsBetweenSubdomainsGenerator
-    input = 'gen'
+    input = 'cmg'
     primary_block = 0
     paired_block = 1
     new_boundary = 'interface'
+  []
+
+  [left_fluid_boundaries]
+    # Define portions of left boundary that are in fluid domain
+    type = SideSetsFromBoundingBoxGenerator
+    input = 'interface'
+    block_id = 1
+    bottom_left = '-0.1 0.1 0'
+    top_right = '0.05 0.9 0'
+    location = OUTSIDE
+    boundaries_old = 'left'
+    boundary_new = 10
   []
 []
 
@@ -300,31 +314,31 @@ advected_interp_method = 'average'
     function = 0
   []
 
-  #[reflective_x]
-  #  type = INSFVSymmetryVelocityBC
-  #  variable = vel_x
-  #  boundary = 'left'
-  #  momentum_component = 'x'
-  #  mu = ${mu}
-  #  u = vel_x
-  #  v = vel_y
-  #[]
+  [reflective_x]
+    type = INSFVSymmetryVelocityBC
+    variable = vel_x
+    boundary = 10
+    momentum_component = 'x'
+    mu = ${mu}
+    u = vel_x
+    v = vel_y
+  []
 
-  #[reflective_y]
-  #  type = INSFVSymmetryVelocityBC
-  #  variable = vel_y
-  #  boundary = 'left'
-  #  momentum_component = 'y'
-  #  mu = ${mu}
-  #  u = vel_x
-  #  v = vel_y
-  #[]
+  [reflective_y]
+    type = INSFVSymmetryVelocityBC
+    variable = vel_y
+    boundary = 10
+    momentum_component = 'y'
+    mu = ${mu}
+    u = vel_x
+    v = vel_y
+  []
 
-  #[reflective_p]
-  #  type = INSFVSymmetryPressureBC
-  #  boundary = 'left'
-  #  variable = pressure
-  #[]
+  [reflective_p]
+    type = INSFVSymmetryPressureBC
+    boundary = 10
+    variable = pressure
+  []
 
   [T_reflective]
     # symmetric problem
@@ -389,8 +403,8 @@ advected_interp_method = 'average'
 
 [Executioner]
   type = Transient
-  end_time = 86400
-  dt = 1500
+  end_time = 50000
+  dt = 5000
   solve_type = 'NEWTON'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'
   petsc_options_value = 'lu NONZERO 1.0'
