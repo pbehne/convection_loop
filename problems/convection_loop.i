@@ -3,15 +3,15 @@
 #####################################################################
 mu = '${units 1.96e-3 Pa*s}' # Exponent should be -5, but run into convergence issues (turbulence)
 rho_fluid = '${units 1.78e-4 g/cm^3 -> kg/m^3}'
-rho_solid = '${units 10.97 g/cm^3 -> kg/m^3}'
+rho_fuel = '${units 10.97 g/cm^3 -> kg/m^3}'
 k_fluid = '${units 0.02 W/(m*K)}'
-k_solid = '${units 10.2 W/(m*K)}'
+k_fuel = '${units 10.2 W/(m*K)}'
 cp_fluid = '${units 5.193 J/(kg*K)}'
-cp_solid = '${units 300 J/(kg*K)}'
+cp_fuel = '${units 300 J/(kg*K)}'
 T_cold = '${units 293 K}'
 h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface, tbd
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
-q_vol = '${units 1e4 W/m^3}'
+q_vol = '${units 10 kW/m^3 -> W/m^3}'
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -262,15 +262,15 @@ advected_interp_method = 'average'
 
   [solid_temp_time]
     type = INSFVEnergyTimeDerivative
-    rho = ${rho_solid}
-    cp = ${cp_solid}
+    rho = ${rho_fuel}
+    cp = ${cp_fuel}
     variable = T
     block = 0 # solid domain in case different rho/cp
   []
 
   [solid_temp_conduction]
     type = FVDiffusion
-    coeff = 'k_solid'
+    coeff = 'k_fuel'
     variable = T
     block = 0 # solid domain in case different k
   []
@@ -279,7 +279,7 @@ advected_interp_method = 'average'
     # Spent fuel volumetric heat source in solid domain
     type = FVBodyForce
     variable = T
-    function = ${q_vol}
+    function = vol_heat_rate
     block = 0
   []
 []
@@ -382,10 +382,10 @@ advected_interp_method = 'average'
 
 [Materials]
   # Associate material property values with required names
-  [functor_constants_solid]
+  [functor_constants_fuel]
     type = ADGenericFunctorMaterial
-    prop_names = 'k_solid'
-    prop_values = '${k_solid}'
+    prop_names = 'k_fuel'
+    prop_values = '${k_fuel}'
     block = '0'
   []
 
@@ -405,10 +405,28 @@ advected_interp_method = 'average'
   []
 []
 
+[Functions]
+  [vol_heat_rate]
+    # Function for volumetric heat rate that decaays to fraction f of its initial value by time T
+    type = ParsedFunction
+    expression = 'Q * exp((log(f) / T) * t) * sin(pi * y / 5)'
+    symbol_names = 'Q f T'
+    symbol_values = '${q_vol} 0.1 ${units 365 day -> s}'
+  []
+[]
+
 [Executioner]
   type = Transient
-  end_time = 50000
-  dt = 5000
+  scheme = implicit-euler
+  end_time = '${units 365 day -> s}'
+  dtmax = '${units 10 day -> s}'
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = '${units 1 day -> s}'
+  []
+  #steady_state_detection = true
+  #steady_state_tolerance = 1e-12
+
   solve_type = 'NEWTON'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'
   petsc_options_value = 'lu NONZERO 1.0'
