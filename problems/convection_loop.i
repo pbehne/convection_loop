@@ -1,17 +1,17 @@
 #####################################################################
 # material properties assuming solid = UO2, fluid = He @ STP
 #####################################################################
-mu = '${units 1.96e-5 Pa*s}'
-rho_fluid = '${units 1.78e-4 g/cm^3}' # -> kg/m^3}'
-rho_solid = '${units 10.97 g/cm^3}' # -> kg/m^3}'
-alpha = '${units 20 K^(-1)}' # natural convection coefficient, tbd
+mu = '${units 1.96e-3 Pa*s}' # Exponent should be -5, but run into convergence issues (turbulence)
+rho_fluid = '${units 1.78e-4 g/cm^3 -> kg/m^3}'
+rho_solid = '${units 10.97 g/cm^3 -> kg/m^3}'
 k_fluid = '${units 0.02 W/(m*K)}'
 k_solid = '${units 10.2 W/(m*K)}'
 cp_fluid = '${units 5.193 J/(kg*K)}'
 cp_solid = '${units 300 J/(kg*K)}'
-T_cold = '${units 0 K}'
-h_interface = '${units 25 W/(m^2*K)}' # convection coefficient at solid/fluid interface, tbd
-q_vol = '${units 1e1 W/m^3}'
+T_cold = '${units 293 K}'
+h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface, tbd
+alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
+q_vol = '${units 1e4 W/m^3}'
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -38,10 +38,10 @@ advected_interp_method = 'average'
     # Block 0 is be solid heat source (spent fuel), block 1 is gasseous coolant
     type = CartesianMeshGenerator
     dim = 2
-    dx = '0.1 0.9'
-    dy = '0.1 0.8 0.1'
-    ix = '3 27'
-    iy = '3 24 27'
+    dx = '1 0.5'
+    dy = '0.5 4 0.5'
+    ix = '50 25'
+    iy = '25 200 25'
     subdomain_id = '1 1
                     0 1
                     1 1
@@ -61,12 +61,15 @@ advected_interp_method = 'average'
     type = SideSetsFromBoundingBoxGenerator
     input = 'interface'
     block_id = 1
-    bottom_left = '-0.1 0.1 0'
-    top_right = '0.05 0.9 0'
+    bottom_left = '-0.1 0.5 0'
+    top_right = '0.05 4.5 0'
     location = OUTSIDE
     boundaries_old = 'left'
     boundary_new = 10
   []
+
+  coord_type = RZ
+  rz_coord_axis = Y
 []
 
 [Variables]
@@ -90,6 +93,7 @@ advected_interp_method = 'average'
   [T]
     # Temperature field spans solid (block 0) and fluid (block 1)
     type = INSFVEnergyVariable
+    #scaling = 1e-2
   []
 
   [lambda]
@@ -162,7 +166,7 @@ advected_interp_method = 'average'
     T_fluid = T
     gravity = '0 -1 0'
     rho = ${rho_fluid}
-    ref_temperature = 0
+    ref_temperature = ${T_cold}
     momentum_component = 'x'
     block = 1 # fluid domain
   []
@@ -218,7 +222,7 @@ advected_interp_method = 'average'
     T_fluid = T
     gravity = '0 -1 0'
     rho = ${rho_fluid}
-    ref_temperature = 0
+    ref_temperature = ${T_cold}
     momentum_component = 'y'
     block = 1 # fluid domain
   []
@@ -348,7 +352,7 @@ advected_interp_method = 'average'
     value = 0
   []
 
-  [T_cold]
+  [T_cold_boundary]
     type = FVDirichletBC
     variable = T
     boundary = 'right top bottom'
@@ -360,7 +364,7 @@ advected_interp_method = 'average'
   [temp_ic]
     type = ConstantIC
     variable = T
-    value = 0
+    value = ${T_cold}
   []
 
   [vel_x]
@@ -411,8 +415,13 @@ advected_interp_method = 'average'
   line_search = none
   nl_rel_tol = 1e-10
   nl_abs_tol = 1e-10
+  automatic_scaling = true
 []
 
 [Outputs]
   exodus = true
 []
+
+#[Debug]
+#  show_var_residual_norms = true
+#[]
