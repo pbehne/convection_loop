@@ -4,14 +4,17 @@
 mu = '${units 1.96e-3 Pa*s}' # Exponent should be -5, but run into convergence issues (turbulence)
 rho_fluid = '${units 1.78e-4 g/cm^3 -> kg/m^3}'
 rho_fuel = '${units 10.97 g/cm^3 -> kg/m^3}'
+rho_steel = '${units 7.85 g/cm^3 -> kg/m^3}'
 k_fluid = '${units 0.02 W/(m*K)}'
 k_fuel = '${units 10.2 W/(m*K)}'
+k_steel = '${units 45 W/(m*k)}'
 cp_fluid = '${units 5.193 J/(kg*K)}'
 cp_fuel = '${units 300 J/(kg*K)}'
+cp_steel = '${units 466 J/(kg*K)}'
 T_cold = '${units 293 K}'
-h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface, tbd
+h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
-q_vol = '${units 10 kW/m^3 -> W/m^3}'
+q_vol = '${units 10 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -34,38 +37,49 @@ advected_interp_method = 'average'
 
 [Mesh]
   [cmg]
-    # Leftmost portion of mesh is block 0, rest is block 1
     # Block 0 is be solid heat source (spent fuel), block 1 is gasseous coolant
+    # Block 2 is steel layer between fuel and coolant
     type = CartesianMeshGenerator
     dim = 2
-    dx = '1 0.5'
-    dy = '0.5 4 0.5'
-    ix = '50 25'
-    iy = '25 200 25'
-    subdomain_id = '1 1
-                    0 1
-                    1 1
+    dx = '0.9 0.1 0.5'
+    dy = '0.5 0.1 3.8 0.1 0.5'
+    ix = '45 5 25'
+    iy = '25 5 190 5 25'
+    subdomain_id = '1 1 1
+                    2 2 1
+                    0 2 1
+                    2 2 1
+                    1 1 1
                     '
   []
-  [interface]
-    # Define interface between solid and fluid surfaces as where blocks 0 and 1 meet
+  [solid_fluid_interface]
+    # Define interface between solid and fluid surfaces as where blocks 2 and 1 meet
     type = SideSetsBetweenSubdomainsGenerator
     input = 'cmg'
-    primary_block = 0
+    primary_block = 2
     paired_block = 1
-    new_boundary = 'interface'
+    new_boundary = 'solid_fluid_interface'
   []
 
   [left_fluid_boundaries]
     # Define portions of left boundary that are in fluid domain
     type = SideSetsFromBoundingBoxGenerator
-    input = 'interface'
+    input = 'solid_fluid_interface'
     block_id = 1
     bottom_left = '-0.1 0.5 0'
     top_right = '0.05 4.5 0'
     location = OUTSIDE
     boundaries_old = 'left'
     boundary_new = 10
+  []
+
+  [fuel_steel_interface]
+    # Define interface between fuel and steel
+    type = SideSetsBetweenSubdomainsGenerator
+    input = 'left_fluid_boundaries'
+    primary_block = 0
+    paired_block = 2
+    new_boundary = 'fuel_steel_interface'
   []
 
   coord_type = RZ
@@ -260,19 +274,19 @@ advected_interp_method = 'average'
     block = 1 # advection in fluid domain only
   []
 
-  [solid_temp_time]
+  [fuel_temp_time]
     type = INSFVEnergyTimeDerivative
     rho = ${rho_fuel}
     cp = ${cp_fuel}
     variable = T
-    block = 0 # solid domain in case different rho/cp
+    block = 0 # fuel domain in case different rho/cp
   []
 
-  [solid_temp_conduction]
+  [fuel_temp_conduction]
     type = FVDiffusion
     coeff = 'k_fuel'
     variable = T
-    block = 0 # solid domain in case different k
+    block = 0 # fuel domain in case different k
   []
 
   [heat_source]
@@ -282,6 +296,21 @@ advected_interp_method = 'average'
     function = vol_heat_rate
     block = 0
   []
+
+  [steel_temp_time]
+    type = INSFVEnergyTimeDerivative
+    rho = ${rho_steel}
+    cp = ${cp_steel}
+    variable = T
+    block = 2 # steel domain in case different rho/cp
+  []
+
+  [steel_temp_conduction]
+    type = FVDiffusion
+    coeff = 'k_steel'
+    variable = T
+    block = 2 # steel domain in case different k
+  []
 []
 
 [FVInterfaceKernels]
@@ -290,31 +319,42 @@ advected_interp_method = 'average'
     type = FVConvectionCorrelationInterface
     variable1 = T
     variable2 = T
-    boundary = 'interface'
+    boundary = 'solid_fluid_interface'
     h = ${h_interface}
     T_solid = T
     T_fluid = T
     subdomain1 = 1
-    subdomain2 = 0
+    subdomain2 = 2
     wall_cell_is_bulk = true
     # Noticed unphysical solutions when using this instead of wall_cell_is_bulk
     #bulk_distance = 0.1
   []
+
+  [conduction]
+    # define conduction at the fuel/steel interface
+    type = FVOneVarDiffusionInterface
+    variable1 = T
+    boundary = fuel_steel_interface
+    subdomain1 = 0
+    subdomain2 = 2
+    coeff1 = 'k_fuel'
+    coeff2 = 'k_steel'
+  []
 []
 
 [FVBCs]
-  # Note that left boundary of fluid domain is 'interface'
+  # Note that left boundary of fluid domain is 'solid_fluid_interface'
   [no_slip_x]
     type = INSFVNoSlipWallBC
     variable = vel_x
-    boundary = 'interface right top bottom'
+    boundary = 'solid_fluid_interface right top bottom'
     function = 0
   []
 
   [no_slip_y]
     type = INSFVNoSlipWallBC
     variable = vel_y
-    boundary = 'interface right top bottom'
+    boundary = 'solid_fluid_interface right top bottom'
     function = 0
   []
 
@@ -387,6 +427,13 @@ advected_interp_method = 'average'
     prop_names = 'k_fuel'
     prop_values = '${k_fuel}'
     block = '0'
+  []
+
+  [functor_constants_steel]
+    type = ADGenericFunctorMaterial
+    prop_names = 'k_steel'
+    prop_values = '${k_steel}'
+    block = '2'
   []
 
   [functor_constants_fluid]
