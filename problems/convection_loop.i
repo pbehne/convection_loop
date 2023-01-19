@@ -14,7 +14,7 @@ cp_steel = '${units 466 J/(kg*K)}'
 T_cold = '${units 293 K}'
 h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
-q_vol = '${units 10 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
+q_vol = '${units 2 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -460,6 +460,15 @@ advected_interp_method = 'average'
     symbol_names = 'Q f T'
     symbol_values = '${q_vol} 0.1 ${units 365 day -> s}'
   []
+
+  #[k_fuel_func]
+  #  # Function to model temperature dependence of fuel thermal conductivity
+  #  # https://inis.iaea.org/collection/NCLCollectionStore/_Public/34/065/34065217.pdf
+  #  type = ParsedFunction
+  #  expression = 'if(T_kel < 1573, 100 / (5.33 + 0.0235 * T_kel), 2.2)'
+  #  symbol_names = 'T_kel'
+  #  symbol_values = 'T'
+  #[]
 []
 
 [Executioner]
