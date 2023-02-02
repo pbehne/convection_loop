@@ -394,3 +394,18 @@ advected_interp_method = 'average'
 [Outputs]
   exodus = true
 []
+
+[MultiApps]
+  [fuel_rod]
+    type = TransientMultiApp
+    positions = '${pitch} -${pitch} 0
+                 ${fparse 2 * ${pitch}} -${pitch} 0
+                 ${pitch} -${fparse 2 * ${pitch}} 0
+                 ${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 0
+                '
+    input_files = 'child_fuel_rod.i'
+    execute_on = timestep_end
+    output_in_position = true
+    #sub_cycling = true
+  []
+[]
