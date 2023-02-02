@@ -49,9 +49,9 @@ advected_interp_method = 'average'
 
   [fuel_rod]
     type = ConcentricCircleMeshGenerator
-    num_sectors = 4
+    num_sectors = 6
     radii = '0.00918 0.00934 0.01054' # meters
-    rings = '4 2 3 4'
+    rings = '4 1 2 3'
     has_outer_square = on
     pitch = ${pitch}
     preserve_volumes = true
@@ -291,24 +291,23 @@ advected_interp_method = 'average'
 []
 
 [FVBCs]
-  # Note that left boundary of fluid domain is 'solid_fluid_interface'
   [no_slip_x]
     type = INSFVNoSlipWallBC
     variable = vel_x
-    boundary = 'left right top bottom back'
+    boundary = 'left right bottom'
     function = 0
   []
   [lid]
     type = INSFVNoSlipWallBC
     variable = vel_x
-    boundary = 'front'
+    boundary = 'top'
     function = 1
   []
 
   [no_slip_y]
     type = INSFVNoSlipWallBC
     variable = vel_y
-    boundary = 'left right top bottom front back'
+    boundary = 'left right top bottom'
     function = 0
   []
 
@@ -322,7 +321,7 @@ advected_interp_method = 'average'
   [T_cold_boundary]
     type = FVDirichletBC
     variable = T
-    boundary = 'left right top bottom front back'
+    boundary = 'left right top bottom'
     value = ${T_cold}
   []
 []
