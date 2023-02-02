@@ -9,6 +9,10 @@ T_cold = '${units 293 K}'
 #h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
 
+# Geometric settings
+pitch = '${units 0.032 m}'
+half_pitch = '${fparse 0.5 * ${pitch}}'
+
 # numerical settings
 velocity_interp_method = 'rc'
 advected_interp_method = 'average'
@@ -23,24 +27,44 @@ advected_interp_method = 'average'
     type = INSFVRhieChowInterpolator
     u = vel_x
     v = vel_y
-    w = vel_z
+    #w = vel_z
     pressure = pressure
   []
 []
 
 [Mesh]
-  [cmg]
-    type = CartesianMeshGenerator
-    dim = 3
 
-    dx = 1.5
-    ix = 30
+  [fluid_rod]
+    type = GeneratedMeshGenerator
+    dim = 2
 
-    dy = 1.5
-    iy = 30
+    xmin = -${half_pitch}
+    xmax = ${half_pitch}
+    ymin = -${half_pitch}
+    ymax = ${half_pitch}
 
-    dz = 5.0
-    iz = 100
+    nx = 14
+    ny = 14
+  []
+
+  [fuel_rod]
+    type = ConcentricCircleMeshGenerator
+    num_sectors = 4
+    radii = '0.00918 0.00934 0.01054' # meters
+    rings = '4 2 3 4'
+    has_outer_square = on
+    pitch = ${pitch}
+    preserve_volumes = true
+  []
+
+  [pmg]
+    type = PatternedMeshGenerator
+    inputs = 'fluid_rod fuel_rod'
+    pattern = '0 0 0 0 ;
+               0 1 1 0 ;
+               0 1 1 0 ;
+               0 0 0 0
+               '
   []
 []
 
@@ -55,10 +79,10 @@ advected_interp_method = 'average'
     type = INSFVVelocityVariable
   []
 
-  [vel_z]
-    # z component of velocity
-    type = INSFVVelocityVariable
-  []
+  #[vel_z]
+  #  # z component of velocity
+  #  type = INSFVVelocityVariable
+  #[]
 
   [pressure]
     type = INSFVPressureVariable
@@ -195,55 +219,55 @@ advected_interp_method = 'average'
     momentum_component = 'y'
   []
 
-  [w_time]
-    type = INSFVMomentumTimeDerivative
-    rho = ${rho_fluid}
-    momentum_component = 'z'
-    variable = vel_z
-  []
+  #[w_time]
+  #  type = INSFVMomentumTimeDerivative
+  #  rho = ${rho_fluid}
+  #  momentum_component = 'z'
+  #  variable = vel_z
+  #[]
 
-  [w_advection]
-    type = INSFVMomentumAdvection
-    variable = vel_z
-    velocity_interp_method = ${velocity_interp_method}
-    advected_interp_method = ${advected_interp_method}
-    rho = ${rho_fluid}
-    momentum_component = 'z'
-  []
+  #[w_advection]
+  #  type = INSFVMomentumAdvection
+  #  variable = vel_z
+  #  velocity_interp_method = ${velocity_interp_method}
+  #  advected_interp_method = ${advected_interp_method}
+  #  rho = ${rho_fluid}
+  #  momentum_component = 'z'
+  #[]
 
-  [w_viscosity]
-    type = INSFVMomentumDiffusion
-    variable = vel_z
-    mu = ${mu}
-    momentum_component = 'z'
-  []
+  #[w_viscosity]
+  #  type = INSFVMomentumDiffusion
+  #  variable = vel_z
+  #  mu = ${mu}
+  #  momentum_component = 'z'
+  #[]
 
-  [w_pressure]
-    type = INSFVMomentumPressure
-    variable = vel_z
-    momentum_component = 'z'
-    pressure = pressure
-  []
+  #[w_pressure]
+  #  type = INSFVMomentumPressure
+  #  variable = vel_z
+  #  momentum_component = 'z'
+  #  pressure = pressure
+  #[]
 
-  [w_buoyancy]
-    # natural convection term
-    type = INSFVMomentumBoussinesq
-    variable = vel_z
-    T_fluid = T
-    gravity = '0 -1 0'
-    rho = ${rho_fluid}
-    ref_temperature = ${T_cold}
-    momentum_component = 'z'
-  []
+  #[w_buoyancy]
+  #  # natural convection term
+  #  type = INSFVMomentumBoussinesq
+  #  variable = vel_z
+  #  T_fluid = T
+  #  gravity = '0 -1 0'
+  #  rho = ${rho_fluid}
+  #  ref_temperature = ${T_cold}
+  #  momentum_component = 'z'
+  #[]
 
-  [w_gravity]
-    # natural convection term
-    type = INSFVMomentumGravity
-    variable = vel_z
-    gravity = '0 -1 0'
-    rho = ${rho_fluid}
-    momentum_component = 'z'
-  []
+  #[w_gravity]
+  #  # natural convection term
+  #  type = INSFVMomentumGravity
+  #  variable = vel_z
+  #  gravity = '0 -1 0'
+  #  rho = ${rho_fluid}
+  #  momentum_component = 'z'
+  #[]
 
   [temp_time]
     type = INSFVEnergyTimeDerivative
@@ -288,12 +312,12 @@ advected_interp_method = 'average'
     function = 0
   []
 
-  [no_slip_z]
-    type = INSFVNoSlipWallBC
-    variable = vel_z
-    boundary = 'left right top bottom front back'
-    function = 0
-  []
+  #[no_slip_z]
+  #  type = INSFVNoSlipWallBC
+  #  variable = vel_z
+  #  boundary = 'left right top bottom front back'
+  #  function = 0
+  #[]
 
   [T_cold_boundary]
     type = FVDirichletBC
@@ -321,6 +345,12 @@ advected_interp_method = 'average'
     variable = vel_y
     value = 0
   []
+
+  #[vel_z]
+  #  type = ConstantIC
+  #  variable = vel_z
+  #  value = 0
+  #[]
 []
 
 [Materials]
