@@ -52,7 +52,7 @@ advected_interp_method = 'average'
     num_sectors = 6
     radii = '0.00918 0.00934 0.01054' # meters
     rings = '4 1 2 3'
-    has_outer_square = on
+    has_outer_square = true
     pitch = ${pitch}
     preserve_volumes = true
   []
@@ -93,9 +93,13 @@ advected_interp_method = 'average'
   []
 
   [lambda]
-    # Not sure what this does, something to do with pressure normalization?
     family = SCALAR
     order = FIRST
+  []
+[]
+
+[AuxVariables]
+  [transferred_T]
   []
 []
 
@@ -407,5 +411,14 @@ advected_interp_method = 'average'
     execute_on = timestep_end
     output_in_position = true
     #sub_cycling = true
+  []
+[]
+
+[Transfers]
+  [pull_T]
+    type = MultiAppShapeEvaluationTransfer
+    from_multi_app = fuel_rod
+    source_variable = sub_T
+    variable = transferred_T
   []
 []
