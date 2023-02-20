@@ -6,7 +6,7 @@ rho_fluid = '${units 1.78e-4 g/cm^3 -> kg/m^3}'
 k_fluid = '${units 0.02 W/(m*K)}'
 cp_fluid = '${units 5.193 J/(kg*K)}'
 T_cold = '${units 293 K}'
-#h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
+h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
 
 # Geometric settings
@@ -19,7 +19,10 @@ advected_interp_method = 'average'
 
 [GlobalParams]
   rhie_chow_user_object = 'rc'
-  two_term_boundary_expansion = false
+[]
+
+[Problem]
+  kernel_coverage_check = false
 []
 
 [UserObjects]
@@ -29,6 +32,7 @@ advected_interp_method = 'average'
     v = vel_y
     #w = vel_z
     pressure = pressure
+    block = '0 4'
   []
 []
 
@@ -66,40 +70,56 @@ advected_interp_method = 'average'
                0 0 0 0
                '
   []
+
+  [mesh]
+    type = SideSetsBetweenSubdomainsGenerator
+    input = 'pmg'
+    paired_block = '3'
+    primary_block = '4'
+    new_boundary = 'outer'
+  []
 []
 
 [Variables]
   [vel_x]
     # x component of velocity
     type = INSFVVelocityVariable
+    block = '0 4'
   []
 
   [vel_y]
     # y component of velocity
     type = INSFVVelocityVariable
+    block = '0 4'
   []
 
   #[vel_z]
   #  # z component of velocity
   #  type = INSFVVelocityVariable
+  #  block = '0 4'
   #[]
 
   [pressure]
     type = INSFVPressureVariable
+    block = '0 4'
   []
 
   [T]
     type = INSFVEnergyVariable
+    block = '0 4'
   []
 
   [lambda]
     family = SCALAR
     order = FIRST
+    block = '0 4'
   []
 []
 
 [AuxVariables]
-  [transferred_T]
+  [T_solid]
+    type = MooseVariableFVReal
+    initial_condition = ${T_cold}
   []
 []
 
@@ -115,12 +135,14 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     velocity_interp_method = ${velocity_interp_method}
     rho = ${rho_fluid}
+    block = '0 4'
   []
 
   [mean_zero_pressure]
     type = FVIntegralValueConstraint
     variable = pressure
     lambda = lambda
+    block = '0 4'
   []
 
   [u_time]
@@ -128,6 +150,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     momentum_component = 'x'
     variable = vel_x
+    block = '0 4'
   []
 
   [u_advection]
@@ -137,6 +160,7 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     rho = ${rho_fluid}
     momentum_component = 'x'
+    block = '0 4'
   []
 
   [u_viscosity]
@@ -144,6 +168,7 @@ advected_interp_method = 'average'
     variable = vel_x
     mu = ${mu}
     momentum_component = 'x'
+    block = '0 4'
   []
 
   [u_pressure]
@@ -151,6 +176,7 @@ advected_interp_method = 'average'
     variable = vel_x
     momentum_component = 'x'
     pressure = pressure
+    block = '0 4'
   []
 
   [u_buoyancy]
@@ -162,6 +188,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     ref_temperature = ${T_cold}
     momentum_component = 'x'
+    block = '0 4'
   []
 
   [u_gravity]
@@ -171,6 +198,7 @@ advected_interp_method = 'average'
     gravity = '0 -1 0'
     rho = ${rho_fluid}
     momentum_component = 'x'
+    block = '0 4'
   []
 
   [v_time]
@@ -178,6 +206,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     momentum_component = 'y'
     variable = vel_y
+    block = '0 4'
   []
 
   [v_advection]
@@ -187,6 +216,7 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     rho = ${rho_fluid}
     momentum_component = 'y'
+    block = '0 4'
   []
 
   [v_viscosity]
@@ -194,6 +224,7 @@ advected_interp_method = 'average'
     variable = vel_y
     mu = ${mu}
     momentum_component = 'y'
+    block = '0 4'
   []
 
   [v_pressure]
@@ -201,6 +232,7 @@ advected_interp_method = 'average'
     variable = vel_y
     momentum_component = 'y'
     pressure = pressure
+    block = '0 4'
   []
 
   [v_buoyancy]
@@ -212,6 +244,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     ref_temperature = ${T_cold}
     momentum_component = 'y'
+    block = '0 4'
   []
 
   [v_gravity]
@@ -221,6 +254,7 @@ advected_interp_method = 'average'
     gravity = '0 -1 0'
     rho = ${rho_fluid}
     momentum_component = 'y'
+    block = '0 4'
   []
 
   #[w_time]
@@ -228,6 +262,7 @@ advected_interp_method = 'average'
   #  rho = ${rho_fluid}
   #  momentum_component = 'z'
   #  variable = vel_z
+  #  block = '0 4'
   #[]
 
   #[w_advection]
@@ -237,6 +272,7 @@ advected_interp_method = 'average'
   #  advected_interp_method = ${advected_interp_method}
   #  rho = ${rho_fluid}
   #  momentum_component = 'z'
+  #  block = '0 4'
   #[]
 
   #[w_viscosity]
@@ -244,6 +280,7 @@ advected_interp_method = 'average'
   #  variable = vel_z
   #  mu = ${mu}
   #  momentum_component = 'z'
+  #  block = '0 4'
   #[]
 
   #[w_pressure]
@@ -251,6 +288,7 @@ advected_interp_method = 'average'
   #  variable = vel_z
   #  momentum_component = 'z'
   #  pressure = pressure
+  #  block = '0 4'
   #[]
 
   #[w_buoyancy]
@@ -262,6 +300,7 @@ advected_interp_method = 'average'
   #  rho = ${rho_fluid}
   #  ref_temperature = ${T_cold}
   #  momentum_component = 'z'
+  #  block = '0 4'
   #[]
 
   #[w_gravity]
@@ -271,6 +310,7 @@ advected_interp_method = 'average'
   #  gravity = '0 -1 0'
   #  rho = ${rho_fluid}
   #  momentum_component = 'z'
+  #  block = '0 4'
   #[]
 
   [temp_time]
@@ -278,12 +318,14 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     cp = ${cp_fluid}
     variable = T
+    block = '0 4'
   []
 
   [temp_conduction]
     type = FVDiffusion
     coeff = 'k_fluid'
     variable = T
+    block = '0 4'
   []
 
   [temp_advection]
@@ -291,6 +333,7 @@ advected_interp_method = 'average'
     variable = T
     velocity_interp_method = ${velocity_interp_method}
     advected_interp_method = ${advected_interp_method}
+    block = '0 4'
   []
 []
 
@@ -298,27 +341,21 @@ advected_interp_method = 'average'
   [no_slip_x]
     type = INSFVNoSlipWallBC
     variable = vel_x
-    boundary = 'left right bottom'
+    boundary = 'left right top bottom outer'
     function = 0
-  []
-  [lid]
-    type = INSFVNoSlipWallBC
-    variable = vel_x
-    boundary = 'top'
-    function = 1
   []
 
   [no_slip_y]
     type = INSFVNoSlipWallBC
     variable = vel_y
-    boundary = 'left right top bottom'
+    boundary = 'left right top bottom outer'
     function = 0
   []
 
   #[no_slip_z]
   #  type = INSFVNoSlipWallBC
   #  variable = vel_z
-  #  boundary = 'left right top bottom front back'
+  #  boundary = 'left right top bottom front back outer'
   #  function = 0
   #[]
 
@@ -327,6 +364,13 @@ advected_interp_method = 'average'
     variable = T
     boundary = 'left right top bottom'
     value = ${T_cold}
+  []
+
+  [cylinder_interface]
+    type = FVFunctorDirichletBC
+    variable = T
+    functor = T_solid_regular
+    boundary = 'outer'
   []
 []
 
@@ -370,29 +414,36 @@ advected_interp_method = 'average'
     temperature = 'T'
     rho = ${rho_fluid}
   []
+
+  [ad_to_regular]
+    type = FunctorADConverter
+    ad_props_in = T_solid
+    reg_props_out = T_solid_regular
+  []
 []
 
 [Executioner]
   type = Transient
   scheme = implicit-euler
-  #end_time = 10
-  dt = 1
-  steady_state_detection = true
-  steady_state_tolerance = 1e-10
+  end_time = 20
+  #dt = 1
   #end_time = '${units 365 day -> s}'
   #dtmax = '${units 10 day -> s}'
-  #[TimeStepper]
-  #  type = IterationAdaptiveDT
-  #  dt = '${units 1 day -> s}'
-  #[]
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = '${units 0.1 s}'
+  []
 
   solve_type = 'NEWTON'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'
   petsc_options_value = 'lu NONZERO 1.0'
   line_search = none
-  nl_rel_tol = 1e-10
+  nl_rel_tol = 1e-08
   nl_abs_tol = 1e-10
   automatic_scaling = true
+  picard_max_its = 30
+  picard_abs_tol = 1e-10
+  picard_rel_tol = 1e-08
 []
 
 [Outputs]
@@ -403,22 +454,31 @@ advected_interp_method = 'average'
   [fuel_rod]
     type = TransientMultiApp
     positions = '${pitch} -${pitch} 0
-                 ${fparse 2 * ${pitch}} -${pitch} 0
-                 ${pitch} -${fparse 2 * ${pitch}} 0
-                 ${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 0
-                '
+    ${fparse 2 * ${pitch}} -${pitch} 0
+    ${pitch} -${fparse 2 * ${pitch}} 0
+    ${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 0
+    '
     input_files = 'child_fuel_rod.i'
-    execute_on = timestep_end
+    execute_on = TIMESTEP_BEGIN
     output_in_position = true
-    #sub_cycling = true
+    sub_cycling = true
   []
 []
 
 [Transfers]
+  [push_T]
+    #type = MultiAppGeometricInterpolationTransfer
+    type = MultiAppGeneralFieldNearestNodeTransfer
+    to_multi_app = fuel_rod
+    source_variable = T
+    variable = T_fluid
+  []
+
   [pull_T]
-    type = MultiAppShapeEvaluationTransfer
+    #type = MultiAppGeometricInterpolationTransfer
+    type = MultiAppGeneralFieldNearestNodeTransfer
     from_multi_app = fuel_rod
     source_variable = sub_T
-    variable = transferred_T
+    variable = T_solid
   []
 []
