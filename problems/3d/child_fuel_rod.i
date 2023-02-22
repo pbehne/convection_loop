@@ -11,7 +11,7 @@ cp_fuel = '${units 300 J/(kg*K)}'
 #cp_gap = '${units 5.193 J/(kg*K)}'
 #cp_steel = '${units 466 J/(kg*K)}'
 T_cold = '${units 293 K}'
-#h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
+h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
 q_vol = '${units 100000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 
 # TODO: add in He gap and clad w/ interfaces
@@ -33,13 +33,13 @@ pitch = '${units 0.032 m}'
 
 [Variables]
   [sub_T]
-    type = INSFVEnergyVariable
+    order = FIRST
+    family = LAGRANGE
   []
 []
 
 [AuxVariables]
   [T_fluid]
-    type = MooseVariableFVReal
     initial_condition = ${T_cold}
   []
 []
@@ -48,34 +48,35 @@ pitch = '${units 0.032 m}'
 # Set up conservation equations to solve
 ###################################################
 
-[FVKernels]
+[Kernels]
   [temp_time]
-    type = INSFVEnergyTimeDerivative
-    rho = ${rho_fuel}
-    cp = ${cp_fuel}
+    type = CoefTimeDerivative
     variable = sub_T
+    Coefficient = '${fparse rho_fuel * cp_fuel}'
   []
 
   [temp_conduction]
-    type = FVDiffusion
-    coeff = 'k_fuel'
+    type = MatDiffusion
     variable = sub_T
+    diffusivity = 'k_fuel'
   []
 
   [heat_source]
-    type = FVBodyForce
+    type = BodyForce
     variable = sub_T
     function = ${q_vol} #vol_heat_rate
     block = 1
   []
 []
 
-[FVBCs]
+[BCs]
   [cylinder_interface]
-    type = FVFunctorDirichletBC
+    type = CoupledConvectiveHeatFluxBC
     variable = sub_T
-    boundary = 'outer'
-    functor = T_fluid_regular
+    boundary = outer
+    htc = ${h_interface}
+    T_infinity = T_fluid
+    alpha = 1
   []
 []
 
@@ -89,16 +90,10 @@ pitch = '${units 0.032 m}'
 
 [Materials]
   # Associate material property values with required names
-  [functor_constants_fuel]
-    type = ADGenericFunctorMaterial
+  [fuel_mat]
+    type = GenericFunctionMaterial
     prop_names = 'cp k_fuel'
     prop_values = '${cp_fuel} ${k_fuel}'
-  []
-
-  [ad_to_regular]
-    type = FunctorADConverter
-    ad_props_in = T_fluid
-    reg_props_out = T_fluid_regular
   []
 []
 

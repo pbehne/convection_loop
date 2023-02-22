@@ -425,14 +425,14 @@ advected_interp_method = 'average'
 [Executioner]
   type = Transient
   scheme = implicit-euler
-  end_time = 20
-  #dt = 1
+  end_time = 2
+  dt = 0.5
   #end_time = '${units 365 day -> s}'
   #dtmax = '${units 10 day -> s}'
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = '${units 0.1 s}'
-  []
+  #[TimeStepper]
+  #  type = IterationAdaptiveDT
+  #  dt = '${units 0.5 s}'
+  #[]
 
   solve_type = 'NEWTON'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'
@@ -442,7 +442,7 @@ advected_interp_method = 'average'
   nl_abs_tol = 1e-10
   automatic_scaling = true
   picard_max_its = 30
-  picard_abs_tol = 1e-10
+  fixed_point_abs_tol = 1e-10
   picard_rel_tol = 1e-08
 []
 
@@ -467,7 +467,6 @@ advected_interp_method = 'average'
 
 [Transfers]
   [push_T]
-    #type = MultiAppGeometricInterpolationTransfer
     type = MultiAppGeneralFieldNearestNodeTransfer
     to_multi_app = fuel_rod
     source_variable = T
@@ -475,7 +474,6 @@ advected_interp_method = 'average'
   []
 
   [pull_T]
-    #type = MultiAppGeometricInterpolationTransfer
     type = MultiAppGeneralFieldNearestNodeTransfer
     from_multi_app = fuel_rod
     source_variable = sub_T
