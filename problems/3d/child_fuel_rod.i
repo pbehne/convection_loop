@@ -100,10 +100,8 @@ pitch = '${units 0.032 m}'
 [Executioner]
   type = Transient
   scheme = implicit-euler
-  #end_time = 10
   dt = 1
-  steady_state_detection = true
-  steady_state_tolerance = 1e-10
+  num_steps = 50
   #end_time = '${units 365 day -> s}'
   #dtmax = '${units 10 day -> s}'
   #[TimeStepper]
@@ -115,7 +113,7 @@ pitch = '${units 0.032 m}'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'
   petsc_options_value = 'lu NONZERO 1.0'
   line_search = none
-  nl_rel_tol = 1e-10
+  nl_rel_tol = 1e-08
   nl_abs_tol = 1e-10
   automatic_scaling = true
 []

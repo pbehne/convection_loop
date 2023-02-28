@@ -367,10 +367,13 @@ advected_interp_method = 'average'
   []
 
   [cylinder_interface]
-    type = FVFunctorDirichletBC
+    type = FVFunctorConvectiveHeatFluxBC
+    T_bulk = T
+    T_solid = T_solid
+    boundary = outer
+    heat_transfer_coefficient = ${h_interface}
     variable = T
-    functor = T_solid_regular
-    boundary = 'outer'
+    is_solid = false
   []
 []
 
@@ -414,25 +417,18 @@ advected_interp_method = 'average'
     temperature = 'T'
     rho = ${rho_fluid}
   []
-
-  [ad_to_regular]
-    type = FunctorADConverter
-    ad_props_in = T_solid
-    reg_props_out = T_solid_regular
-  []
 []
 
 [Executioner]
   type = Transient
   scheme = implicit-euler
-  end_time = 2
-  dt = 0.5
+  end_time = 60
   #end_time = '${units 365 day -> s}'
   #dtmax = '${units 10 day -> s}'
-  #[TimeStepper]
-  #  type = IterationAdaptiveDT
-  #  dt = '${units 0.5 s}'
-  #[]
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = '${units 0.5 s}'
+  []
 
   solve_type = 'NEWTON'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'
@@ -443,7 +439,7 @@ advected_interp_method = 'average'
   automatic_scaling = true
   picard_max_its = 30
   fixed_point_abs_tol = 1e-10
-  picard_rel_tol = 1e-08
+  picard_rel_tol = 1e-8
 []
 
 [Outputs]
@@ -461,7 +457,7 @@ advected_interp_method = 'average'
     input_files = 'child_fuel_rod.i'
     execute_on = TIMESTEP_BEGIN
     output_in_position = true
-    sub_cycling = true
+    sub_cycling = false
   []
 []
 
