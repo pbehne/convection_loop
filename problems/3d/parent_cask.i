@@ -427,7 +427,7 @@ advected_interp_method = 'average'
   #dtmax = '${units 10 day -> s}'
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = '${units 0.5 s}'
+    dt = '${units 1.5 s}'
   []
 
   solve_type = 'NEWTON'
