@@ -3,37 +3,19 @@
 #####################################################################
 rho_fuel = '${units 10.97 g/cm^3 -> kg/m^3}'
 rho_gap = '${units 1.78e-4 g/cm^3 -> kg/m^3}'
-#rho_gap = ${rho_fuel}
 rho_steel = '${units 7.85 g/cm^3 -> kg/m^3}'
-#rho_steel = ${rho_fuel}
 k_fuel = '${units 10.2 W/(m*K)}'
 k_gap = '${units 0.02 W/(m*K)}'
-#k_gap = ${k_fuel}
 k_steel = '${units 45 W/(m*k)}'
-#k_steel = ${k_fuel}
 cp_fuel = '${units 300 J/(kg*K)}'
 cp_gap = '${units 5.193 J/(kg*K)}'
-#cp_gap = ${cp_fuel}
 cp_steel = '${units 466 J/(kg*K)}'
-#cp_steel = ${cp_fuel}
-T_cold = '${units 293 K}'
-h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
 q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
-
-# TODO: add radiation accross gap
-
-# Geometric settings
-pitch = '${units 0.032 m}'
 
 [Mesh]
   [fuel_rod]
-    type = ConcentricCircleMeshGenerator
-    num_sectors = 6
-    radii = '0.00918 0.00934 0.01054' # meters
-    rings = '4 1 2'
-    has_outer_square = false
-    pitch = ${pitch}
-    preserve_volumes = true
+    type = FileMeshGenerator
+    file = '${mesh_path}/fuel_rod.e'
   []
 
   [fuel_gap_interface]
@@ -72,51 +54,54 @@ pitch = '${units 0.032 m}'
 
 [Kernels]
   [temp_time_fuel]
-    type = CoefTimeDerivative
+    type = HeatConductionTimeDerivative
     variable = sub_T
-    Coefficient = '${fparse rho_fuel * cp_fuel}'
+    density_name = rho_fuel
+    specific_heat = cp_fuel
     block = 1
   []
 
   [temp_conduction_fuel]
-    type = MatDiffusion
+    type = HeatConduction
     variable = sub_T
-    diffusivity = 'k_fuel'
+    diffusion_coefficient = 'k_fuel'
     block = 1
   []
 
   [heat_source]
-    type = BodyForce
+    type = HeatSource
     variable = sub_T
     function = ${q_vol} #vol_heat_rate
     block = 1
   []
 
   [temp_time_gap]
-    type = CoefTimeDerivative
+    type = HeatConductionTimeDerivative
     variable = sub_T
-    Coefficient = '${fparse rho_gap * cp_gap}'
+    density_name = rho_gap
+    specific_heat = cp_gap
     block = 2
   []
 
   [temp_conduction_gap]
-    type = MatDiffusion
+    type = HeatConduction
     variable = sub_T
-    diffusivity = 'k_gap'
+    diffusion_coefficient = 'k_gap'
     block = 2
   []
 
   [temp_time_steel]
-    type = CoefTimeDerivative
+    type = HeatConductionTimeDerivative
     variable = sub_T
-    Coefficient = '${fparse rho_steel * cp_steel}'
+    density_name = rho_steel
+    specific_heat = cp_steel
     block = 3
   []
 
   [temp_conduction_steel]
-    type = MatDiffusion
+    type = HeatConduction
     variable = sub_T
-    diffusivity = 'k_steel'
+    diffusion_coefficient = 'k_steel'
     block = 3
   []
 []
@@ -164,22 +149,22 @@ pitch = '${units 0.032 m}'
   # Associate material property values with required names
   [fuel_mat]
     type = GenericFunctionMaterial
-    prop_names = 'cp_fuel k_fuel'
-    prop_values = '${cp_fuel} ${k_fuel}'
+    prop_names = 'cp_fuel k_fuel rho_fuel'
+    prop_values = '${cp_fuel} ${k_fuel} ${rho_fuel}'
     block = 1
   []
 
   [gap_mat]
     type = GenericFunctionMaterial
-    prop_names = 'cp_gap k_gap'
-    prop_values = '${cp_gap} ${k_gap}'
+    prop_names = 'cp_gap k_gap rho_gap'
+    prop_values = '${cp_gap} ${k_gap} ${rho_gap}'
     block = 2
   []
 
   [gap_steel]
     type = GenericFunctionMaterial
-    prop_names = 'cp_steel k_steel'
-    prop_values = '${cp_gap} ${k_steel}'
+    prop_names = 'cp_steel k_steel rho_steel'
+    prop_values = '${cp_steel} ${k_steel} ${rho_steel}'
     block = 3
   []
 []

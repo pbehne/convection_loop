@@ -9,9 +9,9 @@ T_cold = '${units 293 K}'
 h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
 
-# Geometric settings
+# mesh settings
 pitch = '${units 0.032 m}'
-half_pitch = '${fparse 0.5 * ${pitch}}'
+mesh_path = "mesh/mesh22/"
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -39,26 +39,13 @@ advected_interp_method = 'average'
 [Mesh]
 
   [fluid_rod]
-    type = GeneratedMeshGenerator
-    dim = 2
-
-    xmin = -${half_pitch}
-    xmax = ${half_pitch}
-    ymin = -${half_pitch}
-    ymax = ${half_pitch}
-
-    nx = 14
-    ny = 14
+    type = FileMeshGenerator
+    file = '${mesh_path}/fluid_rod.e'
   []
 
   [fuel_rod]
-    type = ConcentricCircleMeshGenerator
-    num_sectors = 6
-    radii = '0.00918 0.00934 0.01054' # meters
-    rings = '4 1 2 3'
-    has_outer_square = true
-    pitch = ${pitch}
-    preserve_volumes = true
+    type = FileMeshGenerator
+    file = '${mesh_path}/fuel_rod_square.e'
   []
 
   [pmg]
@@ -437,7 +424,7 @@ advected_interp_method = 'average'
   nl_rel_tol = 1e-08
   nl_abs_tol = 1e-10
   automatic_scaling = true
-  picard_max_its = 30
+  fixed_point_max_its = 30
   fixed_point_abs_tol = 1e-10
   picard_rel_tol = 1e-8
 []
@@ -458,6 +445,8 @@ advected_interp_method = 'average'
     execute_on = TIMESTEP_BEGIN
     output_in_position = true
     sub_cycling = false
+
+    cli_args = T_cold=${T_cold};h_interface=${h_interface};mesh_path=${mesh_path}
   []
 []
 
