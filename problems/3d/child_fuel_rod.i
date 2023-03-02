@@ -33,6 +33,23 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     primary_block = 3
     new_boundary = 'gap_clad_interface'
   []
+
+  [mesh_extruded]
+    type = AdvancedExtruderGenerator
+    input = gap_clad_interface
+    direction = '0 0 1'
+    heights = 0.128
+    num_layers = 56
+    bottom_boundary = 5
+    top_boundary = 6
+  []
+
+  [rename_boundaries]
+    type = RenameBoundaryGenerator
+    input = mesh_extruded
+    old_boundary = '5 6'
+    new_boundary = 'outer outer'
+  []
 []
 
 [Variables]

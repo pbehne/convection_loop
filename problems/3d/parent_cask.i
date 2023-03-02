@@ -11,7 +11,7 @@ alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 
 
 # mesh settings
 pitch = '${units 0.032 m}'
-mesh_path = "mesh/mesh22/"
+mesh_path = "mesh/mesh14"
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -30,22 +30,21 @@ advected_interp_method = 'average'
     type = INSFVRhieChowInterpolator
     u = vel_x
     v = vel_y
-    #w = vel_z
+    w = vel_z
     pressure = pressure
-    block = '0 4'
+    block = 0
   []
 []
 
 [Mesh]
-
   [fluid_rod]
     type = FileMeshGenerator
-    file = '${mesh_path}/fluid_rod.e'
+    file = 'mesh/mesh14/fluid_rod.e'
   []
 
   [fuel_rod]
     type = FileMeshGenerator
-    file = '${mesh_path}/fuel_rod_square.e'
+    file = 'mesh/mesh14/fuel_rod_square.e'
   []
 
   [pmg]
@@ -58,12 +57,40 @@ advected_interp_method = 'average'
                '
   []
 
+  [mesh_extruded]
+    type = AdvancedExtruderGenerator
+    input = pmg
+    direction = '0 0 1'
+    heights = '0.05 0.128 0.05'
+    num_layers = '22 56 22'
+    bottom_boundary = 5
+    top_boundary = 6
+    subdomain_swaps = '1 0 2 0 3 0 4 0;
+                       1 1 2 2 3 3 4 0;
+                       1 0 2 0 3 0 4 0
+                      '
+  []
+
   [mesh]
     type = SideSetsBetweenSubdomainsGenerator
-    input = 'pmg'
-    paired_block = '3'
-    primary_block = '4'
+    input = 'mesh_extruded'
+    paired_block = '3 1 2'
+    primary_block = '0 0 0'
     new_boundary = 'outer'
+  []
+
+  [rename_boundaries]
+    type = RenameBoundaryGenerator
+    input = mesh
+    old_boundary = 'top bottom'
+    new_boundary = 'front back'
+  []
+
+  [rename_boundaries2]
+    type = RenameBoundaryGenerator
+    input = rename_boundaries
+    old_boundary = '5 6'
+    new_boundary = 'bottom top'
   []
 []
 
@@ -71,35 +98,35 @@ advected_interp_method = 'average'
   [vel_x]
     # x component of velocity
     type = INSFVVelocityVariable
-    block = '0 4'
+    block = 0
   []
 
   [vel_y]
     # y component of velocity
     type = INSFVVelocityVariable
-    block = '0 4'
+    block = 0
   []
 
-  #[vel_z]
-  #  # z component of velocity
-  #  type = INSFVVelocityVariable
-  #  block = '0 4'
-  #[]
+  [vel_z]
+    # z component of velocity
+    type = INSFVVelocityVariable
+    block = 0
+  []
 
   [pressure]
     type = INSFVPressureVariable
-    block = '0 4'
+    block = 0
   []
 
   [T]
     type = INSFVEnergyVariable
-    block = '0 4'
+    block = 0
   []
 
   [lambda]
     family = SCALAR
     order = FIRST
-    block = '0 4'
+    block = 0
   []
 []
 
@@ -122,14 +149,14 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     velocity_interp_method = ${velocity_interp_method}
     rho = ${rho_fluid}
-    block = '0 4'
+    block = 0
   []
 
   [mean_zero_pressure]
     type = FVIntegralValueConstraint
     variable = pressure
     lambda = lambda
-    block = '0 4'
+    block = 0
   []
 
   [u_time]
@@ -137,7 +164,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     momentum_component = 'x'
     variable = vel_x
-    block = '0 4'
+    block = 0
   []
 
   [u_advection]
@@ -147,7 +174,7 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     rho = ${rho_fluid}
     momentum_component = 'x'
-    block = '0 4'
+    block = 0
   []
 
   [u_viscosity]
@@ -155,7 +182,7 @@ advected_interp_method = 'average'
     variable = vel_x
     mu = ${mu}
     momentum_component = 'x'
-    block = '0 4'
+    block = 0
   []
 
   [u_pressure]
@@ -163,7 +190,7 @@ advected_interp_method = 'average'
     variable = vel_x
     momentum_component = 'x'
     pressure = pressure
-    block = '0 4'
+    block = 0
   []
 
   [u_buoyancy]
@@ -171,21 +198,21 @@ advected_interp_method = 'average'
     type = INSFVMomentumBoussinesq
     variable = vel_x
     T_fluid = T
-    gravity = '0 -1 0'
+    gravity = '0 0 -1'
     rho = ${rho_fluid}
     ref_temperature = ${T_cold}
     momentum_component = 'x'
-    block = '0 4'
+    block = 0
   []
 
   [u_gravity]
     # Natural convection term
     type = INSFVMomentumGravity
     variable = vel_x
-    gravity = '0 -1 0'
+    gravity = '0 0 -1'
     rho = ${rho_fluid}
     momentum_component = 'x'
-    block = '0 4'
+    block = 0
   []
 
   [v_time]
@@ -193,7 +220,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     momentum_component = 'y'
     variable = vel_y
-    block = '0 4'
+    block = 0
   []
 
   [v_advection]
@@ -203,7 +230,7 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     rho = ${rho_fluid}
     momentum_component = 'y'
-    block = '0 4'
+    block = 0
   []
 
   [v_viscosity]
@@ -211,7 +238,7 @@ advected_interp_method = 'average'
     variable = vel_y
     mu = ${mu}
     momentum_component = 'y'
-    block = '0 4'
+    block = 0
   []
 
   [v_pressure]
@@ -219,7 +246,7 @@ advected_interp_method = 'average'
     variable = vel_y
     momentum_component = 'y'
     pressure = pressure
-    block = '0 4'
+    block = 0
   []
 
   [v_buoyancy]
@@ -227,92 +254,92 @@ advected_interp_method = 'average'
     type = INSFVMomentumBoussinesq
     variable = vel_y
     T_fluid = T
-    gravity = '0 -1 0'
+    gravity = '0 0 -1'
     rho = ${rho_fluid}
     ref_temperature = ${T_cold}
     momentum_component = 'y'
-    block = '0 4'
+    block = 0
   []
 
   [v_gravity]
     # natural convection term
     type = INSFVMomentumGravity
     variable = vel_y
-    gravity = '0 -1 0'
+    gravity = '0 0 -1'
     rho = ${rho_fluid}
     momentum_component = 'y'
-    block = '0 4'
+    block = 0
   []
 
-  #[w_time]
-  #  type = INSFVMomentumTimeDerivative
-  #  rho = ${rho_fluid}
-  #  momentum_component = 'z'
-  #  variable = vel_z
-  #  block = '0 4'
-  #[]
+  [w_time]
+    type = INSFVMomentumTimeDerivative
+    rho = ${rho_fluid}
+    momentum_component = 'z'
+    variable = vel_z
+    block = 0
+  []
 
-  #[w_advection]
-  #  type = INSFVMomentumAdvection
-  #  variable = vel_z
-  #  velocity_interp_method = ${velocity_interp_method}
-  #  advected_interp_method = ${advected_interp_method}
-  #  rho = ${rho_fluid}
-  #  momentum_component = 'z'
-  #  block = '0 4'
-  #[]
+  [w_advection]
+    type = INSFVMomentumAdvection
+    variable = vel_z
+    velocity_interp_method = ${velocity_interp_method}
+    advected_interp_method = ${advected_interp_method}
+    rho = ${rho_fluid}
+    momentum_component = 'z'
+    block = 0
+  []
 
-  #[w_viscosity]
-  #  type = INSFVMomentumDiffusion
-  #  variable = vel_z
-  #  mu = ${mu}
-  #  momentum_component = 'z'
-  #  block = '0 4'
-  #[]
+  [w_viscosity]
+    type = INSFVMomentumDiffusion
+    variable = vel_z
+    mu = ${mu}
+    momentum_component = 'z'
+    block = 0
+  []
 
-  #[w_pressure]
-  #  type = INSFVMomentumPressure
-  #  variable = vel_z
-  #  momentum_component = 'z'
-  #  pressure = pressure
-  #  block = '0 4'
-  #[]
+  [w_pressure]
+    type = INSFVMomentumPressure
+    variable = vel_z
+    momentum_component = 'z'
+    pressure = pressure
+    block = 0
+  []
 
-  #[w_buoyancy]
-  #  # natural convection term
-  #  type = INSFVMomentumBoussinesq
-  #  variable = vel_z
-  #  T_fluid = T
-  #  gravity = '0 -1 0'
-  #  rho = ${rho_fluid}
-  #  ref_temperature = ${T_cold}
-  #  momentum_component = 'z'
-  #  block = '0 4'
-  #[]
+  [w_buoyancy]
+    # natural convection term
+    type = INSFVMomentumBoussinesq
+    variable = vel_z
+    T_fluid = T
+    gravity = '0 0 -1'
+    rho = ${rho_fluid}
+    ref_temperature = ${T_cold}
+    momentum_component = 'z'
+    block = 0
+  []
 
-  #[w_gravity]
-  #  # natural convection term
-  #  type = INSFVMomentumGravity
-  #  variable = vel_z
-  #  gravity = '0 -1 0'
-  #  rho = ${rho_fluid}
-  #  momentum_component = 'z'
-  #  block = '0 4'
-  #[]
+  [w_gravity]
+    # natural convection term
+    type = INSFVMomentumGravity
+    variable = vel_z
+    gravity = '0 0 -1'
+    rho = ${rho_fluid}
+    momentum_component = 'z'
+    block = 0
+  []
 
   [temp_time]
     type = INSFVEnergyTimeDerivative
     rho = ${rho_fluid}
     cp = ${cp_fluid}
     variable = T
-    block = '0 4'
+    block = 0
   []
 
   [temp_conduction]
     type = FVDiffusion
     coeff = 'k_fluid'
     variable = T
-    block = '0 4'
+    block = 0
   []
 
   [temp_advection]
@@ -320,7 +347,7 @@ advected_interp_method = 'average'
     variable = T
     velocity_interp_method = ${velocity_interp_method}
     advected_interp_method = ${advected_interp_method}
-    block = '0 4'
+    block = 0
   []
 []
 
@@ -328,28 +355,28 @@ advected_interp_method = 'average'
   [no_slip_x]
     type = INSFVNoSlipWallBC
     variable = vel_x
-    boundary = 'left right top bottom outer'
+    boundary = 'left right top bottom front back outer'
     function = 0
   []
 
   [no_slip_y]
     type = INSFVNoSlipWallBC
     variable = vel_y
-    boundary = 'left right top bottom outer'
+    boundary = 'left right top bottom front back outer'
     function = 0
   []
 
-  #[no_slip_z]
-  #  type = INSFVNoSlipWallBC
-  #  variable = vel_z
-  #  boundary = 'left right top bottom front back outer'
-  #  function = 0
-  #[]
+  [no_slip_z]
+    type = INSFVNoSlipWallBC
+    variable = vel_z
+    boundary = 'left right top bottom front back outer'
+    function = 0
+  []
 
   [T_cold_boundary]
     type = FVDirichletBC
     variable = T
-    boundary = 'left right top bottom'
+    boundary = 'left right top bottom front back'
     value = ${T_cold}
   []
 
@@ -383,11 +410,11 @@ advected_interp_method = 'average'
     value = 0
   []
 
-  #[vel_z]
-  #  type = ConstantIC
-  #  variable = vel_z
-  #  value = 0
-  #[]
+  [vel_z]
+    type = ConstantIC
+    variable = vel_z
+    value = 0
+  []
 []
 
 [Materials]
@@ -426,7 +453,7 @@ advected_interp_method = 'average'
   automatic_scaling = true
   fixed_point_max_its = 30
   fixed_point_abs_tol = 1e-10
-  picard_rel_tol = 1e-8
+  fixed_point_rel_tol = 1e-8
 []
 
 [Outputs]
@@ -436,10 +463,10 @@ advected_interp_method = 'average'
 [MultiApps]
   [fuel_rod]
     type = TransientMultiApp
-    positions = '${pitch} -${pitch} 0
-    ${fparse 2 * ${pitch}} -${pitch} 0
-    ${pitch} -${fparse 2 * ${pitch}} 0
-    ${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 0
+    positions = '${pitch} -${pitch} 0.05
+    ${fparse 2 * ${pitch}} -${pitch} 0.05
+    ${pitch} -${fparse 2 * ${pitch}} 0.05
+    ${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 0.05
     '
     input_files = 'child_fuel_rod.i'
     execute_on = TIMESTEP_BEGIN
