@@ -61,8 +61,10 @@ advected_interp_method = 'average'
     type = AdvancedExtruderGenerator
     input = pmg
     direction = '0 0 1'
-    heights = '0.05 0.128 0.05'
-    num_layers = '22 56 22'
+    #heights = '0.05 0.128 0.05'
+    #num_layers = '22 56 22'
+    heights = '0.00223 0.00223 0.0223'
+    num_layers = '1 1 1'
     bottom_boundary = 5
     top_boundary = 6
     subdomain_swaps = '1 0 2 0 3 0 4 0;
@@ -463,10 +465,15 @@ advected_interp_method = 'average'
 [MultiApps]
   [fuel_rod]
     type = TransientMultiApp
-    positions = '${pitch} -${pitch} 0.05
-    ${fparse 2 * ${pitch}} -${pitch} 0.05
-    ${pitch} -${fparse 2 * ${pitch}} 0.05
-    ${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 0.05
+    #positions = '${pitch} -${pitch} 0.05
+    #${fparse 2 * ${pitch}} -${pitch} 0.05
+    #${pitch} -${fparse 2 * ${pitch}} 0.05
+    #${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 0.05
+    #'
+    positions = '${pitch} -${pitch} 0.00223
+    ${fparse 2 * ${pitch}} -${pitch} 0.00223
+    ${pitch} -${fparse 2 * ${pitch}} 0.00223
+    ${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 0.00223
     '
     input_files = 'child_fuel_rod.i'
     execute_on = TIMESTEP_BEGIN

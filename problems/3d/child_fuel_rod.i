@@ -38,8 +38,10 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     type = AdvancedExtruderGenerator
     input = gap_clad_interface
     direction = '0 0 1'
-    heights = 0.128
-    num_layers = 56
+    #heights = 0.128
+    #num_layers = 56
+    heights = 0.00223
+    num_layers = 1
     bottom_boundary = 5
     top_boundary = 6
   []
