@@ -32,7 +32,7 @@ advected_interp_method = 'average'
     v = vel_y
     w = vel_z
     pressure = pressure
-    block = 0
+    block = '0 4'
   []
 []
 
@@ -63,13 +63,13 @@ advected_interp_method = 'average'
     direction = '0 0 1'
     #heights = '0.05 0.128 0.05'
     #num_layers = '22 56 22'
-    heights = '0.00223 0.00223 0.0223'
+    heights = '0.00223 0.00223 0.00223'
     num_layers = '1 1 1'
     bottom_boundary = 5
     top_boundary = 6
-    subdomain_swaps = '1 0 2 0 3 0 4 0;
-                       1 1 2 2 3 3 4 0;
-                       1 0 2 0 3 0 4 0
+    subdomain_swaps = '1 4 2 4 3 4 4 4;
+                       1 1 2 2 3 3 4 4;
+                       1 4 2 4 3 4 4 4
                       '
   []
 
@@ -77,7 +77,7 @@ advected_interp_method = 'average'
     type = SideSetsBetweenSubdomainsGenerator
     input = 'mesh_extruded'
     paired_block = '3 1 2'
-    primary_block = '0 0 0'
+    primary_block = '4 4 4'
     new_boundary = 'outer'
   []
 
@@ -100,35 +100,35 @@ advected_interp_method = 'average'
   [vel_x]
     # x component of velocity
     type = INSFVVelocityVariable
-    block = 0
+    block = '0 4'
   []
 
   [vel_y]
     # y component of velocity
     type = INSFVVelocityVariable
-    block = 0
+    block = '0 4'
   []
 
   [vel_z]
     # z component of velocity
     type = INSFVVelocityVariable
-    block = 0
+    block = '0 4'
   []
 
   [pressure]
     type = INSFVPressureVariable
-    block = 0
+    block = '0 4'
   []
 
   [T]
     type = INSFVEnergyVariable
-    block = 0
+    block = '0 4'
   []
 
   [lambda]
     family = SCALAR
     order = FIRST
-    block = 0
+    block = '0 4'
   []
 []
 
@@ -136,6 +136,7 @@ advected_interp_method = 'average'
   [T_solid]
     type = MooseVariableFVReal
     initial_condition = ${T_cold}
+    block = 4
   []
 []
 
@@ -151,14 +152,14 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     velocity_interp_method = ${velocity_interp_method}
     rho = ${rho_fluid}
-    block = 0
+    block = '0 4'
   []
 
   [mean_zero_pressure]
     type = FVIntegralValueConstraint
     variable = pressure
     lambda = lambda
-    block = 0
+    block = '0 4'
   []
 
   [u_time]
@@ -166,7 +167,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     momentum_component = 'x'
     variable = vel_x
-    block = 0
+    block = '0 4'
   []
 
   [u_advection]
@@ -176,7 +177,7 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     rho = ${rho_fluid}
     momentum_component = 'x'
-    block = 0
+    block = '0 4'
   []
 
   [u_viscosity]
@@ -184,7 +185,7 @@ advected_interp_method = 'average'
     variable = vel_x
     mu = ${mu}
     momentum_component = 'x'
-    block = 0
+    block = '0 4'
   []
 
   [u_pressure]
@@ -192,7 +193,7 @@ advected_interp_method = 'average'
     variable = vel_x
     momentum_component = 'x'
     pressure = pressure
-    block = 0
+    block = '0 4'
   []
 
   [u_buoyancy]
@@ -204,7 +205,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     ref_temperature = ${T_cold}
     momentum_component = 'x'
-    block = 0
+    block = '0 4'
   []
 
   [u_gravity]
@@ -214,7 +215,7 @@ advected_interp_method = 'average'
     gravity = '0 0 -1'
     rho = ${rho_fluid}
     momentum_component = 'x'
-    block = 0
+    block = '0 4'
   []
 
   [v_time]
@@ -222,7 +223,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     momentum_component = 'y'
     variable = vel_y
-    block = 0
+    block = '0 4'
   []
 
   [v_advection]
@@ -232,7 +233,7 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     rho = ${rho_fluid}
     momentum_component = 'y'
-    block = 0
+    block = '0 4'
   []
 
   [v_viscosity]
@@ -240,7 +241,7 @@ advected_interp_method = 'average'
     variable = vel_y
     mu = ${mu}
     momentum_component = 'y'
-    block = 0
+    block = '0 4'
   []
 
   [v_pressure]
@@ -248,7 +249,7 @@ advected_interp_method = 'average'
     variable = vel_y
     momentum_component = 'y'
     pressure = pressure
-    block = 0
+    block = '0 4'
   []
 
   [v_buoyancy]
@@ -260,7 +261,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     ref_temperature = ${T_cold}
     momentum_component = 'y'
-    block = 0
+    block = '0 4'
   []
 
   [v_gravity]
@@ -270,7 +271,7 @@ advected_interp_method = 'average'
     gravity = '0 0 -1'
     rho = ${rho_fluid}
     momentum_component = 'y'
-    block = 0
+    block = '0 4'
   []
 
   [w_time]
@@ -278,7 +279,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     momentum_component = 'z'
     variable = vel_z
-    block = 0
+    block = '0 4'
   []
 
   [w_advection]
@@ -288,7 +289,7 @@ advected_interp_method = 'average'
     advected_interp_method = ${advected_interp_method}
     rho = ${rho_fluid}
     momentum_component = 'z'
-    block = 0
+    block = '0 4'
   []
 
   [w_viscosity]
@@ -296,7 +297,7 @@ advected_interp_method = 'average'
     variable = vel_z
     mu = ${mu}
     momentum_component = 'z'
-    block = 0
+    block = '0 4'
   []
 
   [w_pressure]
@@ -304,7 +305,7 @@ advected_interp_method = 'average'
     variable = vel_z
     momentum_component = 'z'
     pressure = pressure
-    block = 0
+    block = '0 4'
   []
 
   [w_buoyancy]
@@ -316,7 +317,7 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     ref_temperature = ${T_cold}
     momentum_component = 'z'
-    block = 0
+    block = '0 4'
   []
 
   [w_gravity]
@@ -326,7 +327,7 @@ advected_interp_method = 'average'
     gravity = '0 0 -1'
     rho = ${rho_fluid}
     momentum_component = 'z'
-    block = 0
+    block = '0 4'
   []
 
   [temp_time]
@@ -334,14 +335,14 @@ advected_interp_method = 'average'
     rho = ${rho_fluid}
     cp = ${cp_fluid}
     variable = T
-    block = 0
+    block = '0 4'
   []
 
   [temp_conduction]
     type = FVDiffusion
     coeff = 'k_fluid'
     variable = T
-    block = 0
+    block = '0 4'
   []
 
   [temp_advection]
@@ -349,7 +350,7 @@ advected_interp_method = 'average'
     variable = T
     velocity_interp_method = ${velocity_interp_method}
     advected_interp_method = ${advected_interp_method}
-    block = 0
+    block = '0 4'
   []
 []
 
@@ -490,6 +491,7 @@ advected_interp_method = 'average'
     to_multi_app = fuel_rod
     source_variable = T
     variable = T_fluid
+    from_blocks = 4
   []
 
   [pull_T]
