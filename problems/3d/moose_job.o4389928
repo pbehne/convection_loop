@@ -1,0 +1,648 @@
+Framework Information:
+MOOSE Version:           git commit 2aaed35990 on 2023-02-28
+LibMesh Version:         482ca36f0ba05dbb5d87d02688d43eaa4bf983eb
+PETSc Version:           3.16.6
+SLEPc Version:           3.16.2
+Current Time:            Fri Mar  3 15:23:35 2023
+Executable Timestamp:    Thu Mar  2 11:31:19 2023
+
+Parallelism:
+  Num Processors:          48
+  Num Threads:             1
+
+Mesh: 
+  Parallel Type:           replicated
+  Mesh Dimension:          3
+  Spatial Dimension:       3
+  Nodes:                   
+    Total:                 15684
+    Local:                 404
+    Min/Max/Avg:           212/412/326
+  Elems:                   
+    Total:                 11424
+    Local:                 243
+    Min/Max/Avg:           231/245/238
+  Num Subdomains:          4
+  Num Partitions:          48
+  Partitioner:             metis
+
+Nonlinear System:
+  Num DOFs:                53041
+  Num Local DOFs:          1215
+  Variables:               { "vel_x" "vel_y" "vel_z" "pressure" "T" } "lambda" 
+  Finite Element Types:    "MONOMIAL" "SCALAR" 
+  Approximation Orders:    "CONSTANT" "FIRST" 
+
+Auxiliary System:
+  Num DOFs:                11424
+  Num Local DOFs:          243
+  Variables:               "T_solid" 
+  Finite Element Types:    "MONOMIAL" 
+  Approximation Orders:    "CONSTANT" 
+
+Execution Information:
+  Executioner:             Transient
+  TimeStepper:             IterationAdaptiveDT
+  Solver Mode:             NEWTON
+  MOOSE Preconditioner:    SMP (auto)
+
+[36mfuel_rod0: [39mParallelism:
+[36mfuel_rod0: [39m  Num Processors:          12
+[36mfuel_rod0: [39m  Num Threads:             1
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mMesh: 
+[36mfuel_rod0: [39m  Parallel Type:           replicated
+[36mfuel_rod0: [39m  Mesh Dimension:          3
+[36mfuel_rod0: [39m  Spatial Dimension:       3
+[36mfuel_rod0: [39m  Nodes:                   
+[36mfuel_rod0: [39m    Total:                 434
+[36mfuel_rod0: [39m    Local:                 52
+[36mfuel_rod0: [39m    Min/Max/Avg:           18/52/36
+[36mfuel_rod0: [39m  Elems:                   
+[36mfuel_rod0: [39m    Total:                 204
+[36mfuel_rod0: [39m    Local:                 17
+[36mfuel_rod0: [39m    Min/Max/Avg:           17/17/17
+[36mfuel_rod0: [39m  Num Subdomains:          3
+[36mfuel_rod0: [39m  Num Partitions:          12
+[36mfuel_rod0: [39m  Partitioner:             metis
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mNonlinear System:
+[36mfuel_rod0: [39m  Num DOFs:                434
+[36mfuel_rod0: [39m  Num Local DOFs:          52
+[36mfuel_rod0: [39m  Variables:               "sub_T" 
+[36mfuel_rod0: [39m  Finite Element Types:    "LAGRANGE" 
+[36mfuel_rod0: [39m  Approximation Orders:    "FIRST" 
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mAuxiliary System:
+[36mfuel_rod0: [39m  Num DOFs:                434
+[36mfuel_rod0: [39m  Num Local DOFs:          52
+[36mfuel_rod0: [39m  Variables:               "T_fluid" 
+[36mfuel_rod0: [39m  Finite Element Types:    "LAGRANGE" 
+[36mfuel_rod0: [39m  Approximation Orders:    "FIRST" 
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mExecution Information:
+[36mfuel_rod0: [39m  Executioner:             Transient
+[36mfuel_rod0: [39m  TimeStepper:             IterationAdaptiveDT
+[36mfuel_rod0: [39m  Solver Mode:             NEWTON
+[36mfuel_rod0: [39m  MOOSE Preconditioner:    SMP (auto)
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 0, time = 0
+
+Time Step 0, time = 0
+
+Scalar Variable Values:
++----------------+----------------+
+| time           | lambda         |
++----------------+----------------+
+|   0.000000e+00 |   0.000000e+00 |
++----------------+----------------+
+
+
+Time Step 1, time = 1.5, dt = 1.5
+[35mInitial fixed point residual norm: [39m1.917109e-07[39m
+
+[35mBeginning fixed point iteration 0[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 1, time = 1.5, dt = 1.5
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mPerforming automatic scaling calculation
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.549668e+00[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m1.549668e+00[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m2.407769e-15[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.192305e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m6.198078e-03[39m
+[35m
+Main app solve:[39m
+
+Performing automatic scaling calculation
+
+ 0 Nonlinear |R| = [32m1.037351e+01[39m
+      0 Linear |R| = [32m1.037351e+01[39m
+      1 Linear |R| = [32m1.202600e-14[39m
+ 1 Nonlinear |R| = [32m5.641089e-08[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m1.917109e-07[39m
+ 1 Picard |R| = [31m6.198078e-03[39m
+
+[35mBeginning fixed point iteration 1[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 1, time = 1.5, dt = 1.5
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m3.984512e-03[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m3.984512e-03[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m1.218433e-17[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m1.883205e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [31m2.888883e-02[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m2.888883e-02[39m
+      0 Linear |R| = [32m2.888883e-02[39m
+      1 Linear |R| = [32m4.508904e-17[39m
+ 1 Nonlinear |R| = [32m1.029669e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m1.917109e-07[39m
+ 1 Picard |R| = [31m6.198078e-03[39m
+ 2 Picard |R| = [31m2.888883e-02[39m
+
+[35mBeginning fixed point iteration 2[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 1, time = 1.5, dt = 1.5
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.213699e-05[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m1.213699e-05[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m7.066361e-20[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.604409e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m1.045566e-04[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m1.045566e-04[39m
+      0 Linear |R| = [32m1.045566e-04[39m
+      1 Linear |R| = [32m1.684613e-19[39m
+ 1 Nonlinear |R| = [32m1.026200e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m1.917109e-07[39m
+ 1 Picard |R| = [31m6.198078e-03[39m
+ 2 Picard |R| = [31m2.888883e-02[39m
+ 3 Picard |R| = [31m1.045566e-04[39m
+
+[35mBeginning fixed point iteration 3[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 1, time = 1.5, dt = 1.5
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m4.729184e-08[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m4.729184e-08[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m3.971010e-22[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m1.870381e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m4.557844e-07[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m4.557844e-07[39m
+      0 Linear |R| = [32m4.557844e-07[39m
+      1 Linear |R| = [32m1.005067e-21[39m
+ 1 Nonlinear |R| = [32m1.016062e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m1.917109e-07[39m
+ 1 Picard |R| = [31m6.198078e-03[39m
+ 2 Picard |R| = [31m2.888883e-02[39m
+ 3 Picard |R| = [31m1.045566e-04[39m
+ 4 Picard |R| = [31m4.557844e-07[39m
+
+[35mBeginning fixed point iteration 4[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 1, time = 1.5, dt = 1.5
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m2.158602e-10[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m2.158602e-10[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m2.168678e-24[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.158536e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m2.116798e-09[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m2.116798e-09[39m
+      0 Linear |R| = [32m2.116798e-09[39m
+      1 Linear |R| = [32m4.250618e-24[39m
+ 1 Nonlinear |R| = [32m1.003980e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m1.917109e-07[39m
+ 1 Picard |R| = [31m6.198078e-03[39m
+ 2 Picard |R| = [31m2.888883e-02[39m
+ 3 Picard |R| = [31m1.045566e-04[39m
+ 4 Picard |R| = [31m4.557844e-07[39m
+ 5 Picard |R| = [32m2.116798e-09[39m
+
+[35mBeginning fixed point iteration 5[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 1, time = 1.5, dt = 1.5
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.052380e-12[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m1.003980e-12[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m1.003980e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m1.917109e-07[39m
+ 1 Picard |R| = [31m6.198078e-03[39m
+ 2 Picard |R| = [31m2.888883e-02[39m
+ 3 Picard |R| = [31m1.045566e-04[39m
+ 4 Picard |R| = [31m4.557844e-07[39m
+ 5 Picard |R| = [32m2.116798e-09[39m
+ 6 Picard |R| = [32m1.003980e-12[39m
+
+Fixed point convergence reason: CONVERGED_ABS
+
+Outlier Variable Residual Norms:
+  T: [31m1.003980e-12[39m
+
+Scalar Variable Values:
++----------------+----------------+
+| time           | lambda         |
++----------------+----------------+
+|   0.000000e+00 |   0.000000e+00 |
+|   1.500000e+00 |  -1.389549e-22 |
++----------------+----------------+
+
+
+Time Step 2, time = 4.5, dt = 3
+[35mInitial fixed point residual norm: [39m2.286173e-04[39m
+
+[35mBeginning fixed point iteration 0[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 2, time = 4.5, dt = 3
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.521639e+00[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m1.521639e+00[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m4.847374e-15[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.099264e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m2.011896e+01[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m2.011896e+01[39m
+      0 Linear |R| = [32m2.011896e+01[39m
+      1 Linear |R| = [32m2.358561e-14[39m
+ 1 Nonlinear |R| = [32m1.945614e-09[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.286173e-04[39m
+ 1 Picard |R| = [31m2.011896e+01[39m
+
+[35mBeginning fixed point iteration 1[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 2, time = 4.5, dt = 3
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m7.851320e-03[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m7.851320e-03[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m5.683760e-17[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.612160e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m1.167477e-01[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m1.167477e-01[39m
+      0 Linear |R| = [32m1.167477e-01[39m
+      1 Linear |R| = [32m1.896378e-16[39m
+ 1 Nonlinear |R| = [32m1.159842e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.286173e-04[39m
+ 1 Picard |R| = [31m2.011896e+01[39m
+ 2 Picard |R| = [31m1.167477e-01[39m
+
+[35mBeginning fixed point iteration 2[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 2, time = 4.5, dt = 3
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m5.000126e-05[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m5.000126e-05[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m6.971504e-19[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.185061e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m8.802840e-04[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m8.802840e-04[39m
+      0 Linear |R| = [32m8.802840e-04[39m
+      1 Linear |R| = [32m1.588633e-18[39m
+ 1 Nonlinear |R| = [32m1.007079e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.286173e-04[39m
+ 1 Picard |R| = [31m2.011896e+01[39m
+ 2 Picard |R| = [31m1.167477e-01[39m
+ 3 Picard |R| = [31m8.802840e-04[39m
+
+[35mBeginning fixed point iteration 3[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 2, time = 4.5, dt = 3
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m4.037981e-07[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m4.037981e-07[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m6.303565e-21[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.703012e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m7.635199e-06[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m7.635199e-06[39m
+      0 Linear |R| = [32m7.635199e-06[39m
+      1 Linear |R| = [32m1.536147e-20[39m
+ 1 Nonlinear |R| = [32m9.951402e-13[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.286173e-04[39m
+ 1 Picard |R| = [31m2.011896e+01[39m
+ 2 Picard |R| = [31m1.167477e-01[39m
+ 3 Picard |R| = [31m8.802840e-04[39m
+ 4 Picard |R| = [32m7.635199e-06[39m
+
+[35mBeginning fixed point iteration 4[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 2, time = 4.5, dt = 3
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m3.649855e-09[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m3.649855e-09[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m6.574739e-23[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.585309e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m6.869686e-08[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m6.869686e-08[39m
+      0 Linear |R| = [32m6.869686e-08[39m
+      1 Linear |R| = [32m1.407838e-22[39m
+ 1 Nonlinear |R| = [32m1.024776e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.286173e-04[39m
+ 1 Picard |R| = [31m2.011896e+01[39m
+ 2 Picard |R| = [31m1.167477e-01[39m
+ 3 Picard |R| = [31m8.802840e-04[39m
+ 4 Picard |R| = [32m7.635199e-06[39m
+ 5 Picard |R| = [32m6.869686e-08[39m
+
+[35mBeginning fixed point iteration 5[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 2, time = 4.5, dt = 3
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m3.390533e-11[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m1.024776e-12[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m1.024776e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.286173e-04[39m
+ 1 Picard |R| = [31m2.011896e+01[39m
+ 2 Picard |R| = [31m1.167477e-01[39m
+ 3 Picard |R| = [31m8.802840e-04[39m
+ 4 Picard |R| = [32m7.635199e-06[39m
+ 5 Picard |R| = [32m6.869686e-08[39m
+ 6 Picard |R| = [32m1.024776e-12[39m
+
+Fixed point convergence reason: CONVERGED_ABS
+
+Outlier Variable Residual Norms:
+  T: [31m1.024776e-12[39m
+
+Scalar Variable Values:
++----------------+----------------+
+| time           | lambda         |
++----------------+----------------+
+|   0.000000e+00 |   0.000000e+00 |
+|   1.500000e+00 |  -1.389549e-22 |
+|   4.500000e+00 |   2.706372e-24 |
++----------------+----------------+
+
+
+Time Step 3, time = 10.5, dt = 6
+[35mInitial fixed point residual norm: [39m2.254278e-04[39m
+
+[35mBeginning fixed point iteration 0[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 3, time = 10.5, dt = 6
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.473152e+00[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m1.473152e+00[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m1.112629e-14[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.044303e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m3.843942e+01[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m3.843942e+01[39m
+      0 Linear |R| = [32m3.843942e+01[39m
+      1 Linear |R| = [32m4.770983e-14[39m
+ 1 Nonlinear |R| = [32m1.802045e-08[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.254278e-04[39m
+ 1 Picard |R| = [31m3.843942e+01[39m
+
+[35mBeginning fixed point iteration 1[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 3, time = 10.5, dt = 6
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.538218e-02[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m1.538218e-02[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m2.973425e-16[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m1.855638e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m4.752069e-01[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m4.752069e-01[39m
+      0 Linear |R| = [32m4.752069e-01[39m
+      1 Linear |R| = [32m7.473770e-16[39m
+ 1 Nonlinear |R| = [32m1.386797e-11[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.254278e-04[39m
+ 1 Picard |R| = [31m3.843942e+01[39m
+ 2 Picard |R| = [31m4.752069e-01[39m
+
+[35mBeginning fixed point iteration 2[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 3, time = 10.5, dt = 6
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m2.086496e-04[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m2.086496e-04[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m6.209674e-18[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.125129e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m7.346995e-03[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m7.346995e-03[39m
+      0 Linear |R| = [32m7.346995e-03[39m
+      1 Linear |R| = [32m1.408505e-17[39m
+ 1 Nonlinear |R| = [32m1.014720e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.254278e-04[39m
+ 1 Picard |R| = [31m3.843942e+01[39m
+ 2 Picard |R| = [31m4.752069e-01[39m
+ 3 Picard |R| = [31m7.346995e-03[39m
+
+[35mBeginning fixed point iteration 3[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 3, time = 10.5, dt = 6
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m3.414322e-06[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m3.414322e-06[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m1.132480e-19[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m1.883669e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m1.228160e-04[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m1.228160e-04[39m
+      0 Linear |R| = [32m1.228160e-04[39m
+      1 Linear |R| = [32m2.720955e-19[39m
+ 1 Nonlinear |R| = [32m1.011922e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.254278e-04[39m
+ 1 Picard |R| = [31m3.843942e+01[39m
+ 2 Picard |R| = [31m4.752069e-01[39m
+ 3 Picard |R| = [31m7.346995e-03[39m
+ 4 Picard |R| = [32m1.228160e-04[39m
+
+[35mBeginning fixed point iteration 4[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 3, time = 10.5, dt = 6
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m5.915146e-08[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m5.915146e-08[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m2.243248e-21[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.134020e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m2.079067e-06[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m2.079067e-06[39m
+      0 Linear |R| = [32m2.079067e-06[39m
+      1 Linear |R| = [32m4.672772e-21[39m
+ 1 Nonlinear |R| = [32m1.015006e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.254278e-04[39m
+ 1 Picard |R| = [31m3.843942e+01[39m
+ 2 Picard |R| = [31m4.752069e-01[39m
+ 3 Picard |R| = [31m7.346995e-03[39m
+ 4 Picard |R| = [32m1.228160e-04[39m
+ 5 Picard |R| = [32m2.079067e-06[39m
+
+[35mBeginning fixed point iteration 5[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 3, time = 10.5, dt = 6
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.032049e-09[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m1.032049e-09[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m3.761377e-23[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.438008e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m3.514226e-08[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m3.514226e-08[39m
+      0 Linear |R| = [32m3.514226e-08[39m
+      1 Linear |R| = [32m6.938736e-23[39m
+ 1 Nonlinear |R| = [32m1.007438e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.254278e-04[39m
+ 1 Picard |R| = [31m3.843942e+01[39m
+ 2 Picard |R| = [31m4.752069e-01[39m
+ 3 Picard |R| = [31m7.346995e-03[39m
+ 4 Picard |R| = [32m1.228160e-04[39m
+ 5 Picard |R| = [32m2.079067e-06[39m
+ 6 Picard |R| = [32m3.514226e-08[39m
+
+[35mBeginning fixed point iteration 6[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 3, time = 10.5, dt = 6
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.795898e-11[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m1.007438e-12[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m1.007438e-12[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.254278e-04[39m
+ 1 Picard |R| = [31m3.843942e+01[39m
+ 2 Picard |R| = [31m4.752069e-01[39m
+ 3 Picard |R| = [31m7.346995e-03[39m
+ 4 Picard |R| = [32m1.228160e-04[39m
+ 5 Picard |R| = [32m2.079067e-06[39m
+ 6 Picard |R| = [32m3.514226e-08[39m
+ 7 Picard |R| = [32m1.007438e-12[39m
+
+Fixed point convergence reason: CONVERGED_ABS
+
+Outlier Variable Residual Norms:
+  T: [31m1.007438e-12[39m
+
+Scalar Variable Values:
++----------------+----------------+
+| time           | lambda         |
++----------------+----------------+
+|   0.000000e+00 |   0.000000e+00 |
+|   1.500000e+00 |  -1.389549e-22 |
+|   4.500000e+00 |   2.706372e-24 |
+|   1.050000e+01 |  -1.326642e-22 |
++----------------+----------------+
+
+
+Time Step 4, time = 22.5, dt = 12
+[35mInitial fixed point residual norm: [39m2.220161e-04[39m
+
+[35mBeginning fixed point iteration 0[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 4, time = 22.5, dt = 12
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.395158e+00[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m1.395158e+00[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m3.123343e-14[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.549771e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m7.236335e+01[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m7.236335e+01[39m
+      0 Linear |R| = [32m7.236335e+01[39m
+      1 Linear |R| = [32m1.122812e-13[39m
+ 1 Nonlinear |R| = [32m1.415453e-07[39m
+[32m Solve Converged![39m
+
+ 0 Picard |R| = [32m2.220161e-04[39m
+ 1 Picard |R| = [31m7.236335e+01[39m
+
+[35mBeginning fixed point iteration 1[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 4, time = 22.5, dt = 12
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m2.994992e-02[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m2.994992e-02[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m1.152696e-15[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.303223e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m1.888714e+00[39m
+[35m
+Main app solve:[39m
+ 0 Nonlinear |R| = [32m1.888714e+00[39m
+[r4i7n13:mpi_rank_40][MPIDI_CH3_Abort] Fatal error in MPI_Recv:
+Other MPI error, error stack:
+MPI_Recv(200)......................: MPI_Recv(buf=0x6752010, count=1, dtype=USER<vector>, src=MPI_ANY_SOURCE, tag=10, comm=0xc4000009, status=0x55f91d0) failed
+MPIDI_CH3I_Progress(285)...........: 
+handle_read(1350)..................: 
+handle_read_individual(1408).......: 
+MPIDI_CH3I_MRAIL_Parse_header(1508): Control shouldn't reach here in prototype, header %d
+ (errno 217)
+: Success (0)
+[r4i7n13:mpi_rank_38][MPIDI_CH3_Abort] Fatal error in MPI_Recv:
+Other MPI error, error stack:
+MPI_Recv(200)......................: MPI_Recv(buf=0x607d010, count=1, dtype=USER<vector>, src=MPI_ANY_SOURCE, tag=10, comm=0xc4000009, status=0x55e2e40) failed
+MPIDI_CH3I_Progress(285)...........: 
+handle_read(1350)..................: 
+handle_read_individual(1408).......: 
+MPIDI_CH3I_MRAIL_Parse_header(1508): Control shouldn't reach here in prototype, header %d
+ (errno 217)
+: Success (0)

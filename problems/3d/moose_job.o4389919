@@ -1,0 +1,134 @@
+Framework Information:
+MOOSE Version:           git commit 2aaed35990 on 2023-02-28
+LibMesh Version:         482ca36f0ba05dbb5d87d02688d43eaa4bf983eb
+PETSc Version:           3.16.6
+SLEPc Version:           3.16.2
+Current Time:            Fri Mar  3 15:13:36 2023
+Executable Timestamp:    Thu Mar  2 11:31:19 2023
+
+Parallelism:
+  Num Processors:          48
+  Num Threads:             1
+
+Mesh: 
+  Parallel Type:           replicated
+  Mesh Dimension:          3
+  Spatial Dimension:       3
+  Nodes:                   
+    Total:                 15684
+    Local:                 404
+    Min/Max/Avg:           212/412/326
+  Elems:                   
+    Total:                 11424
+    Local:                 243
+    Min/Max/Avg:           231/245/238
+  Num Subdomains:          4
+  Num Partitions:          48
+  Partitioner:             metis
+
+Nonlinear System:
+  Num DOFs:                53041
+  Num Local DOFs:          1215
+  Variables:               { "vel_x" "vel_y" "vel_z" "pressure" "T" } "lambda" 
+  Finite Element Types:    "MONOMIAL" "SCALAR" 
+  Approximation Orders:    "CONSTANT" "FIRST" 
+
+Auxiliary System:
+  Num DOFs:                11424
+  Num Local DOFs:          243
+  Variables:               "T_solid" 
+  Finite Element Types:    "MONOMIAL" 
+  Approximation Orders:    "CONSTANT" 
+
+Execution Information:
+  Executioner:             Transient
+  TimeStepper:             IterationAdaptiveDT
+  Solver Mode:             NEWTON
+  MOOSE Preconditioner:    SMP (auto)
+
+[36mfuel_rod0: [39mParallelism:
+[36mfuel_rod0: [39m  Num Processors:          12
+[36mfuel_rod0: [39m  Num Threads:             1
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mMesh: 
+[36mfuel_rod0: [39m  Parallel Type:           replicated
+[36mfuel_rod0: [39m  Mesh Dimension:          3
+[36mfuel_rod0: [39m  Spatial Dimension:       3
+[36mfuel_rod0: [39m  Nodes:                   
+[36mfuel_rod0: [39m    Total:                 434
+[36mfuel_rod0: [39m    Local:                 52
+[36mfuel_rod0: [39m    Min/Max/Avg:           18/52/36
+[36mfuel_rod0: [39m  Elems:                   
+[36mfuel_rod0: [39m    Total:                 204
+[36mfuel_rod0: [39m    Local:                 17
+[36mfuel_rod0: [39m    Min/Max/Avg:           17/17/17
+[36mfuel_rod0: [39m  Num Subdomains:          3
+[36mfuel_rod0: [39m  Num Partitions:          12
+[36mfuel_rod0: [39m  Partitioner:             metis
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mNonlinear System:
+[36mfuel_rod0: [39m  Num DOFs:                434
+[36mfuel_rod0: [39m  Num Local DOFs:          52
+[36mfuel_rod0: [39m  Variables:               "sub_T" 
+[36mfuel_rod0: [39m  Finite Element Types:    "LAGRANGE" 
+[36mfuel_rod0: [39m  Approximation Orders:    "FIRST" 
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mAuxiliary System:
+[36mfuel_rod0: [39m  Num DOFs:                434
+[36mfuel_rod0: [39m  Num Local DOFs:          52
+[36mfuel_rod0: [39m  Variables:               "T_fluid" 
+[36mfuel_rod0: [39m  Finite Element Types:    "LAGRANGE" 
+[36mfuel_rod0: [39m  Approximation Orders:    "FIRST" 
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mExecution Information:
+[36mfuel_rod0: [39m  Executioner:             Transient
+[36mfuel_rod0: [39m  TimeStepper:             IterationAdaptiveDT
+[36mfuel_rod0: [39m  Solver Mode:             NEWTON
+[36mfuel_rod0: [39m  MOOSE Preconditioner:    SMP (auto)
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 0, time = 0
+
+Time Step 0, time = 0
+
+Scalar Variable Values:
++----------------+----------------+
+| time           | lambda         |
++----------------+----------------+
+|   0.000000e+00 |   0.000000e+00 |
++----------------+----------------+
+
+
+Time Step 1, time = 1.5, dt = 1.5
+[35mInitial fixed point residual norm: [39m1.917109e-07[39m
+
+[35mBeginning fixed point iteration 0[39m
+
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mTime Step 1, time = 1.5, dt = 1.5
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39mPerforming automatic scaling calculation
+[36mfuel_rod0: [39m
+[36mfuel_rod0: [39m 0 Nonlinear |R| = [32m1.549668e+00[39m
+[36mfuel_rod0: [39m      0 Linear |R| = [32m1.549668e+00[39m
+[36mfuel_rod0: [39m      1 Linear |R| = [32m2.413710e-15[39m
+[36mfuel_rod0: [39m 1 Nonlinear |R| = [32m2.192729e-13[39m
+[36mfuel_rod0: [39m[32m Solve Converged![39m
+[35mFixed point residual norm after TIMESTEP_BEGIN MultiApps: [32m6.198078e-03[39m
+[35m
+Main app solve:[39m
+
+Performing automatic scaling calculation
+
+ 0 Nonlinear |R| = [32m1.037351e+01[39m
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   PID 49041 RUNNING AT r4i7n13.ib0.sawtooth.inl.gov
+=   EXIT CODE: 139
+=   CLEANING UP REMAINING PROCESSES
+=   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+===================================================================================
+YOUR APPLICATION TERMINATED WITH THE EXIT STRING: Segmentation fault (signal 11)
+This typically refers to a problem with your application.
+Please see the FAQ page for debugging suggestions
