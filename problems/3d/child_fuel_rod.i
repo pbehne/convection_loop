@@ -72,19 +72,17 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 ###################################################
 
 [Kernels]
-  [temp_time_fuel]
+  [temp_time]
     type = HeatConductionTimeDerivative
     variable = sub_T
-    density_name = rho_fuel
-    specific_heat = cp_fuel
-    block = 1
+    density_name = 'rho'
+    specific_heat = 'cp'
   []
 
-  [temp_conduction_fuel]
+  [temp_conduction]
     type = HeatConduction
     variable = sub_T
-    diffusion_coefficient = 'k_fuel'
-    block = 1
+    diffusion_coefficient = 'k'
   []
 
   [heat_source]
@@ -92,56 +90,6 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     variable = sub_T
     function = ${q_vol} #vol_heat_rate
     block = 1
-  []
-
-  [temp_time_gap]
-    type = HeatConductionTimeDerivative
-    variable = sub_T
-    density_name = rho_gap
-    specific_heat = cp_gap
-    block = 2
-  []
-
-  [temp_conduction_gap]
-    type = HeatConduction
-    variable = sub_T
-    diffusion_coefficient = 'k_gap'
-    block = 2
-  []
-
-  [temp_time_steel]
-    type = HeatConductionTimeDerivative
-    variable = sub_T
-    density_name = rho_steel
-    specific_heat = cp_steel
-    block = 3
-  []
-
-  [temp_conduction_steel]
-    type = HeatConduction
-    variable = sub_T
-    diffusion_coefficient = 'k_steel'
-    block = 3
-  []
-[]
-
-[InterfaceKernels]
-  [fuel_gap_conduction]
-    type = InterfaceDiffusion
-    variable = sub_T
-    neighbor_var = sub_T
-    boundary = fuel_gap_interface
-    D = "k_fuel"
-    D_neighbor = "k_gap"
-  []
-
-  [gap_clad_conduction]
-    type = InterfaceDiffusion
-    variable = sub_T
-    neighbor_var = sub_T
-    boundary = gap_clad_interface
-    D = "k_gap"
-    D_neighbor = "k_steel"
   []
 []
 
@@ -168,21 +116,21 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
   # Associate material property values with required names
   [fuel_mat]
     type = GenericFunctionMaterial
-    prop_names = 'cp_fuel k_fuel rho_fuel'
+    prop_names = 'cp k rho'
     prop_values = '${cp_fuel} ${k_fuel} ${rho_fuel}'
     block = 1
   []
 
   [gap_mat]
     type = GenericFunctionMaterial
-    prop_names = 'cp_gap k_gap rho_gap'
+    prop_names = 'cp k rho'
     prop_values = '${cp_gap} ${k_gap} ${rho_gap}'
     block = 2
   []
 
   [gap_steel]
     type = GenericFunctionMaterial
-    prop_names = 'cp_steel k_steel rho_steel'
+    prop_names = 'cp k rho'
     prop_values = '${cp_steel} ${k_steel} ${rho_steel}'
     block = 3
   []
