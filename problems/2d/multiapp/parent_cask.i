@@ -59,7 +59,7 @@ advected_interp_method = 'average'
 
   [mesh]
     type = SideSetsBetweenSubdomainsGenerator
-    input = 'pmg'
+    input = pmg
     paired_block = '3'
     primary_block = '4'
     new_boundary = 'outer'
@@ -100,6 +100,7 @@ advected_interp_method = 'average'
   [T_solid]
     type = MooseVariableFVReal
     initial_condition = ${T_cold}
+    block = 4
   []
 []
 
@@ -350,7 +351,7 @@ advected_interp_method = 'average'
   automatic_scaling = true
   fixed_point_max_its = 30
   fixed_point_abs_tol = 1e-10
-  picard_rel_tol = 1e-8
+  fixed_point_rel_tol = 1e-8
 []
 
 [Outputs]
@@ -380,6 +381,7 @@ advected_interp_method = 'average'
     to_multi_app = fuel_rod
     source_variable = T
     variable = T_fluid
+    from_blocks = 4
   []
 
   [pull_T]

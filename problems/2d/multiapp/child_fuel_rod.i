@@ -44,7 +44,10 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 
 [AuxVariables]
   [T_fluid]
+    order = FIRST
+    family = LAGRANGE
     initial_condition = ${T_cold}
+    block = 3
   []
 []
 
