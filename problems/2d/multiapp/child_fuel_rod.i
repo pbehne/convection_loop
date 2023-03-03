@@ -77,26 +77,6 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
   []
 []
 
-[InterfaceKernels]
-  [fuel_gap_conduction]
-    type = InterfaceDiffusion
-    variable = sub_T
-    neighbor_var = sub_T
-    boundary = fuel_gap_interface
-    D = "k"
-    D_neighbor = "k"
-  []
-
-  [gap_clad_conduction]
-    type = InterfaceDiffusion
-    variable = sub_T
-    neighbor_var = sub_T
-    boundary = gap_clad_interface
-    D = "k"
-    D_neighbor = "k"
-  []
-[]
-
 [BCs]
   [cylinder_interface]
     type = CoupledConvectiveHeatFluxBC
