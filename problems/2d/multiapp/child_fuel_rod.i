@@ -17,22 +17,6 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     type = FileMeshGenerator
     file = '${mesh_path}/fuel_rod.e'
   []
-
-  [fuel_gap_interface]
-    type = SideSetsBetweenSubdomainsGenerator
-    input = 'fuel_rod'
-    paired_block = 1
-    primary_block = 2
-    new_boundary = 'fuel_gap_interface'
-  []
-
-  [gap_clad_interface]
-    type = SideSetsBetweenSubdomainsGenerator
-    input = 'fuel_gap_interface'
-    paired_block = 2
-    primary_block = 3
-    new_boundary = 'gap_clad_interface'
-  []
 []
 
 [Variables]
@@ -47,7 +31,7 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     order = FIRST
     family = LAGRANGE
     initial_condition = ${T_cold}
-    block = 3
+    block = 'clad_block'
   []
 []
 
@@ -73,7 +57,7 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     type = HeatSource
     variable = sub_T
     function = ${q_vol} #vol_heat_rate
-    block = 1
+    block = 'fuel_block'
   []
 []
 
@@ -102,21 +86,21 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     type = GenericFunctionMaterial
     prop_names = 'cp k rho'
     prop_values = '${cp_fuel} ${k_fuel} ${rho_fuel}'
-    block = 1
+    block = 'fuel_block'
   []
 
   [gap_mat]
     type = GenericFunctionMaterial
     prop_names = 'cp k rho'
     prop_values = '${cp_gap} ${k_gap} ${rho_gap}'
-    block = 2
+    block = 'gap_block'
   []
 
-  [gap_steel]
+  [steel_mat]
     type = GenericFunctionMaterial
     prop_names = 'cp k rho'
     prop_values = '${cp_steel} ${k_steel} ${rho_steel}'
-    block = 3
+    block = 'clad_block'
   []
 []
 

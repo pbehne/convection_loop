@@ -56,6 +56,13 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     old_boundary = '5 6'
     new_boundary = 'outer outer'
   []
+
+  [rename_block_name]
+    type = RenameBlockGenerator
+    input = rename_boundaries
+    old_block = '1 2 3'
+    new_block = 'fuel_block gap_block clad_block'
+  []
 []
 
 [Variables]
@@ -95,7 +102,7 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     type = HeatSource
     variable = sub_T
     function = ${q_vol} #vol_heat_rate
-    block = 1
+    block = fuel_block
   []
 []
 
@@ -144,21 +151,21 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     type = GenericFunctionMaterial
     prop_names = 'cp k rho'
     prop_values = '${cp_fuel} ${k_fuel} ${rho_fuel}'
-    block = 1
+    block = fuel_block
   []
 
   [gap_mat]
     type = GenericFunctionMaterial
     prop_names = 'cp k rho'
     prop_values = '${cp_gap} ${k_gap} ${rho_gap}'
-    block = 2
+    block = gap_block
   []
 
   [gap_steel]
     type = GenericFunctionMaterial
     prop_names = 'cp k rho'
     prop_values = '${cp_steel} ${k_steel} ${rho_steel}'
-    block = 3
+    block = clad_block
   []
 []
 

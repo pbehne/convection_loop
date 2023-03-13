@@ -19,25 +19,12 @@ r_extra_block = '${fparse r_clad + (r_gap - r_fuel)}'
     pitch = ${pitch}
     preserve_volumes = true
   []
-  [rename_block]
+  [rename_block_id]
     type = RenameBlockGenerator
     input = fuel_rod
     old_block = 5
     new_block = 0
   []
-
-  #[fluid_rod]
-  #  type = GeneratedMeshGenerator
-  #  dim = 2
-
-  #  xmin = -${half_pitch}
-  #  xmax = ${half_pitch}
-  #  ymin = -${half_pitch}
-  #  ymax = ${half_pitch}
-
-  #  nx = 14
-  #  ny = 14
-  #[]
 []
 
 [Outputs]
