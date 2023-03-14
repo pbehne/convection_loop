@@ -125,4 +125,12 @@ q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 
 [Outputs]
   exodus = true
+
+  [pgraph]
+    type = PerfGraphOutput
+    execute_on = 'final'  # Default is "final"
+    level = 2                     # Default is 1
+    heaviest_branch = true        # Default is false
+    heaviest_sections = 10        # Default is 0
+  []
 []

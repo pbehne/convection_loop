@@ -472,6 +472,15 @@ advected_interp_method = 'average'
 
 [Outputs]
   exodus = true
+  checkpoint = true
+
+  [pgraph]
+    type = PerfGraphOutput
+    execute_on = 'final'  # Default is "final"
+    level = 2                     # Default is 1
+    heaviest_branch = true        # Default is false
+    heaviest_sections = 10        # Default is 0
+  []
 []
 
 [MultiApps]
