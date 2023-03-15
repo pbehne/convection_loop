@@ -519,11 +519,7 @@ advected_interp_method = 'average'
 [MultiApps]
   [fuel_rod]
     type = TransientMultiApp
-    positions = '${pitch} -${pitch} 1.0
-    ${fparse 2 * ${pitch}} -${pitch} 1.0
-    ${pitch} -${fparse 2 * ${pitch}} 1.0
-    ${fparse 2 * ${pitch}} -${fparse 2 * ${pitch}} 1.0
-    '
+    positions_file = "mesh/positions.txt"
     input_files = 'child_fuel_rod.i'
     execute_on = TIMESTEP_BEGIN
     output_in_position = true
