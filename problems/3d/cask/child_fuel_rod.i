@@ -10,7 +10,7 @@ k_steel = '${units 45 W/(m*k)}'
 cp_fuel = '${units 300 J/(kg*K)}'
 cp_gap = '${units 5.193 J/(kg*K)}'
 cp_steel = '${units 466 J/(kg*K)}'
-q_vol = '${units 10000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
+q_vol = '${units 1100 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 
 [Mesh]
   [fuel_rod]
