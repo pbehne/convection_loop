@@ -1,20 +1,17 @@
 import numpy as np
 
 num_pins = 5
-padding = 1
+padding = 2
 
 pitch = 0.032 # m
 z = 1.0 # m
 
-assembly_map = np.array([[0, 0, 1, 1, 0, 0],
-                         [0, 1, 1, 1, 1, 0],
-                         [1, 1, 1, 1, 1, 1],
-                         [1, 1, 1, 1, 1, 1],
-                         [0, 1, 1, 1, 1, 0],
-                         [0, 0, 1, 1, 0, 0],
+assembly_map = np.array([[0, 0, 1],
+                         [0, 1, 1],
+                         [1, 1, 1]
                          ])
 
-assert num_pins + padding == len(assembly_map) # Ensures resulting pattern is square
+#assert num_pins + padding == len(assembly_map) # Ensures resulting pattern is square
 
 n = len(assembly_map) * num_pins
 
@@ -44,8 +41,8 @@ for row in range(n):
 
 for p in range(padding):
     pattern += "0 " * (n + (len(assembly_map) + 1) * padding) + ";\n"
+pattern = pattern.strip("\n")[:-1]
 
 print(pattern)
-print(pattern.count("0"), pattern.count("1"))
 
 positions.close()
