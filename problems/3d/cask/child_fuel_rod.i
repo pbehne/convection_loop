@@ -101,7 +101,7 @@ q_vol = '${units 1100 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
   [heat_source]
     type = HeatSource
     variable = sub_T
-    function = ${q_vol} #vol_heat_rate
+    function = vol_heat_rate
     block = fuel_block
   []
 []
@@ -166,6 +166,16 @@ q_vol = '${units 1100 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
     prop_names = 'cp k rho'
     prop_values = '${cp_steel} ${k_steel} ${rho_steel}'
     block = clad_block
+  []
+[]
+
+[Functions]
+  [vol_heat_rate]
+    # Function for volumetric heat rate that decaays to fraction f of its initial value by time T
+    type = ParsedFunction
+    expression = 'Q * exp((log(f) / T) * t) * sin(pi * z / 5)'
+    symbol_names = 'Q f T'
+    symbol_values = '${q_vol} 0.1 ${units 365 day -> s}'
   []
 []
 
