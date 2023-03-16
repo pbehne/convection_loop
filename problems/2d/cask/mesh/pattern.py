@@ -44,5 +44,6 @@ for p in range(padding):
 pattern = pattern.strip("\n")[:-1]
 
 print(pattern)
+print(pattern.count("1"))
 
 positions.close()

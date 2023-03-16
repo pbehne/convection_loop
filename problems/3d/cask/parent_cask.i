@@ -364,28 +364,61 @@ advected_interp_method = 'average'
   [no_slip_x]
     type = INSFVNoSlipWallBC
     variable = vel_x
-    boundary = 'left right top bottom front back outer'
+    boundary = 'left top front back outer'
     function = 0
+  []
+
+  [reflective_x]
+    type = INSFVSymmetryVelocityBC
+    variable = vel_x
+    boundary = 'bottom right'
+    momentum_component = x
+    mu = ${mu}
+    u = vel_x
+    v = vel_y
+    w = vel_z
   []
 
   [no_slip_y]
     type = INSFVNoSlipWallBC
     variable = vel_y
-    boundary = 'left right top bottom front back outer'
+    boundary = 'left top front back outer'
     function = 0
+  []
+
+  [reflective_y]
+    type = INSFVSymmetryVelocityBC
+    variable = vel_y
+    boundary = 'bottom right'
+    momentum_component = y
+    mu = ${mu}
+    u = vel_x
+    v = vel_y
+    w = vel_z
   []
 
   [no_slip_z]
     type = INSFVNoSlipWallBC
     variable = vel_z
-    boundary = 'left right top bottom front back outer'
+    boundary = 'left top front back outer'
     function = 0
+  []
+
+  [reflective_z]
+    type = INSFVSymmetryVelocityBC
+    variable = vel_z
+    boundary = 'bottom right'
+    momentum_component = z
+    mu = ${mu}
+    u = vel_x
+    v = vel_y
+    w = vel_z
   []
 
   [T_cold_boundary]
     type = FVDirichletBC
     variable = T
-    boundary = 'left right top bottom front back'
+    boundary = 'left top front back'
     value = ${T_cold}
   []
 
@@ -397,6 +430,13 @@ advected_interp_method = 'average'
     heat_transfer_coefficient = ${h_interface}
     variable = T
     is_solid = false
+  []
+
+  [reflective_T]
+    type = FVNeumannBC
+    variable = T
+    boundary = 'bottom right'
+    value = 0
   []
 []
 
