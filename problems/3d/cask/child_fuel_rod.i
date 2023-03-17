@@ -10,7 +10,7 @@ k_steel = '${units 45 W/(m*k)}'
 cp_fuel = '${units 300 J/(kg*K)}'
 cp_gap = '${units 5.193 J/(kg*K)}'
 cp_steel = '${units 466 J/(kg*K)}'
-q_vol = '${units 1100 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
+q_vol = '${units 11000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 
 [Mesh]
   [fuel_rod]
@@ -182,11 +182,11 @@ q_vol = '${units 1100 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 [Executioner]
   type = Transient
   scheme = implicit-euler
-  #end_time = '${units 365 day -> s}'
-  #dtmax = '${units 10 day -> s}'
+  end_time = '${units 365 day -> s}'
+  dtmax = '${units 10 day -> s}'
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = '${units 1.5 s}'
+    dt = '${units 1 day -> s}'
   []
 
   solve_type = 'NEWTON'

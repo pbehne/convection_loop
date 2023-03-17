@@ -485,12 +485,11 @@ advected_interp_method = 'average'
 [Executioner]
   type = Transient
   scheme = implicit-euler
-  end_time = 3
-  #end_time = '${units 365 day -> s}'
-  #dtmax = '${units 10 day -> s}'
+  end_time = '${units 365 day -> s}'
+  dtmax = '${units 10 day -> s}'
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = '${units 1.5 s}'
+    dt = '${units 1 day -> s}'
   []
 
   solve_type = 'NEWTON'
@@ -511,10 +510,10 @@ advected_interp_method = 'average'
 
   [pgraph]
     type = PerfGraphOutput
-    execute_on = 'final'  # Default is "final"
-    level = 2                     # Default is 1
-    heaviest_branch = true        # Default is false
-    heaviest_sections = 10        # Default is 0
+    execute_on = 'TIMESTEP_END'
+    level = 4
+    heaviest_branch = true
+    heaviest_sections = 10
   []
 []
 
