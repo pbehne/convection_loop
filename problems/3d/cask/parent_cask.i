@@ -49,7 +49,7 @@ advected_interp_method = 'average'
 
   [pmg]
     type = FileMeshGenerator
-    file = 'mesh/quarter_cask_2d.cpr'
+    file = 'mesh/quarter_cask_2d.e'
   []
 
   [mesh_extruded]

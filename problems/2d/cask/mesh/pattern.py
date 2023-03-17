@@ -1,14 +1,13 @@
 import numpy as np
 
-num_pins = 5
-padding = 2
+num_pins = 2
+padding = 0
 
 pitch = 0.032 # m
 z = 1.0 # m
 
-assembly_map = np.array([[0, 0, 1],
-                         [0, 1, 1],
-                         [1, 1, 1]
+assembly_map = np.array([[0, 1],
+                         [1, 1]
                          ])
 
 #assert num_pins + padding == len(assembly_map) # Ensures resulting pattern is square
