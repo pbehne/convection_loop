@@ -58,8 +58,8 @@ advected_interp_method = 'average'
     direction = '0 0 1'
     heights = '1.0 0.00016 0.0012 0.00016 4.0 0.00016 0.0012 0.00016 1.0'
     num_layers = '361 1 1 1 1750 1 1 1 361'
-    bottom_boundary = 5
-    top_boundary = 6
+    bottom_boundary = 500
+    top_boundary = 600
     subdomain_swaps = '1 0 2 0 3 0 4 0;
                        1 4 2 4 3 4 4 4;
                        1 3 2 3 3 3 4 4;
@@ -90,7 +90,7 @@ advected_interp_method = 'average'
   [rename_boundaries2]
     type = RenameBoundaryGenerator
     input = rename_boundaries
-    old_boundary = '5 6'
+    old_boundary = '500 600'
     new_boundary = 'bottom top'
   []
 
@@ -510,7 +510,7 @@ advected_interp_method = 'average'
 
   [pgraph]
     type = PerfGraphOutput
-    execute_on = 'TIMESTEP_END'
+    execute_on = 'initial TIMESTEP_END'
     level = 4
     heaviest_branch = true
     heaviest_sections = 10
