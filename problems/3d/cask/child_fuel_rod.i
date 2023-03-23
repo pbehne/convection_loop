@@ -13,55 +13,60 @@ cp_steel = '${units 466 J/(kg*K)}'
 q_vol = '${units 11000 kW/m^3 -> W/m^3}' # Volumetric heat source amplitude
 
 [Mesh]
-  [fuel_rod]
+  #[fuel_rod]
+  #  type = FileMeshGenerator
+  #  file = '${mesh_path}/fuel_rod.e'
+  #[]
+
+  #[fuel_gap_interface]
+  #  type = SideSetsBetweenSubdomainsGenerator
+  #  input = 'fuel_rod'
+  #  paired_block = 1
+  #  primary_block = 2
+  #  new_boundary = 'fuel_gap_interface'
+  #[]
+
+  #[gap_clad_interface]
+  #  type = SideSetsBetweenSubdomainsGenerator
+  #  input = 'fuel_gap_interface'
+  #  paired_block = 2
+  #  primary_block = 3
+  #  new_boundary = 'gap_clad_interface'
+  #[]
+
+  #[mesh_extruded]
+  #  type = AdvancedExtruderGenerator
+  #  input = gap_clad_interface
+  #  direction = '0 0 1'
+  #  heights = '0.0012 0.00016 4.0 0.00016 0.0012'
+  #  num_layers = '1 1 1750 1 1'
+  #  bottom_boundary = 5
+  #  top_boundary = 6
+  #  subdomain_swaps = '1 3 2 3 3 3;
+  #                     1 2 2 2 3 3;
+  #                     1 1 2 2 3 3;
+  #                     1 2 2 2 3 3;
+  #                     1 3 2 3 3 3
+  #                    '
+  #[]
+
+  #[rename_boundaries]
+  #  type = RenameBoundaryGenerator
+  #  input = mesh_extruded
+  #  old_boundary = '5 6'
+  #  new_boundary = 'outer outer'
+  #[]
+
+  #[rename_block_name]
+  #  type = RenameBlockGenerator
+  #  input = rename_boundaries
+  #  old_block = '1 2 3'
+  #  new_block = 'fuel_block gap_block clad_block'
+  #[]
+
+  [mesh]
     type = FileMeshGenerator
-    file = '${mesh_path}/fuel_rod.e'
-  []
-
-  [fuel_gap_interface]
-    type = SideSetsBetweenSubdomainsGenerator
-    input = 'fuel_rod'
-    paired_block = 1
-    primary_block = 2
-    new_boundary = 'fuel_gap_interface'
-  []
-
-  [gap_clad_interface]
-    type = SideSetsBetweenSubdomainsGenerator
-    input = 'fuel_gap_interface'
-    paired_block = 2
-    primary_block = 3
-    new_boundary = 'gap_clad_interface'
-  []
-
-  [mesh_extruded]
-    type = AdvancedExtruderGenerator
-    input = gap_clad_interface
-    direction = '0 0 1'
-    heights = '0.0012 0.00016 4.0 0.00016 0.0012'
-    num_layers = '1 1 1750 1 1'
-    bottom_boundary = 5
-    top_boundary = 6
-    subdomain_swaps = '1 3 2 3 3 3;
-                       1 2 2 2 3 3;
-                       1 1 2 2 3 3;
-                       1 2 2 2 3 3;
-                       1 3 2 3 3 3
-                      '
-  []
-
-  [rename_boundaries]
-    type = RenameBoundaryGenerator
-    input = mesh_extruded
-    old_boundary = '5 6'
-    new_boundary = 'outer outer'
-  []
-
-  [rename_block_name]
-    type = RenameBlockGenerator
-    input = rename_boundaries
-    old_block = '1 2 3'
-    new_block = 'fuel_block gap_block clad_block'
+    file = "mesh/fuel_rod_3d.cpr"
   []
 []
 
