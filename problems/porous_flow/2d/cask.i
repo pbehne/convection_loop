@@ -11,7 +11,7 @@ cp_steel = '${units 466 J/(kg*K)}'
 T_cold = '${units 293 K}'
 h_interface = '${units 20 W/(m^2*K)}' # convection coefficient at solid/fluid interface
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
-Q = '${units 2 kW -> W}' # Heat source amplitude
+Q = '${units 10 kW -> W}' # Heat source amplitude
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -49,23 +49,46 @@ advected_interp_method = 'average'
     type = SideSetsBetweenSubdomainsGenerator
     input = rename_block_name
     primary_block = porous_block
-    paired_block = 'wall_block'
-    new_boundary = 'solid_fluid_interface_1'
+    paired_block = wall_block
+    new_boundary = 'solid_fluid_interface'
   []
 
   [solid_fluid_interface_2]
     type = SideSetsBetweenSubdomainsGenerator
     input = solid_fluid_interface_1
     primary_block = spacer_block
-    paired_block = 'wall_block'
-    new_boundary = 'solid_fluid_interface_2'
+    paired_block = wall_block
+    new_boundary = 'solid_fluid_interface'
   []
 
-  [rename_interface]
-    type = RenameBoundaryGenerator
+  [wall_left_boundary_1]
+    type = SideSetsFromBoundingBoxGenerator
     input = solid_fluid_interface_2
-    old_boundary = 'solid_fluid_interface_1 solid_fluid_interface_2'
-    new_boundary = 'solid_fluid_interface solid_fluid_interface'
+    block_id = 0
+    bottom_left = '0 0 0'
+    top_right = '0.1 0.0127 0'
+    boundaries_old = left
+    boundary_new = wall_left
+  []
+
+  [wall_left_boundary_2]
+    type = SideSetsFromBoundingBoxGenerator
+    input = wall_left_boundary_1
+    block_id = 0
+    bottom_left = '0 2.9857 0'
+    top_right = '0.1 2.9984 0'
+    boundaries_old = left
+    boundary_new = wall_left
+  []
+
+  [fluid_left_boundary]
+    type = SideSetsFromBoundingBoxGenerator
+    input = wall_left_boundary_2
+    block_id = '2'
+    bottom_left = '0 0.0127 0'
+    top_right = '0.1 2.9857 0'
+    boundaries_old = left
+    boundary_new = fluid_left
   []
 
   coord_type = RZ
@@ -341,21 +364,21 @@ advected_interp_method = 'average'
   [no_slip_x]
     type = INSFVNoSlipWallBC
     variable = superficial_vel_x
-    boundary = 'solid_fluid_interface top bottom'
+    boundary = 'solid_fluid_interface'
     function = 0
   []
 
   [no_slip_y]
     type = INSFVNoSlipWallBC
     variable = superficial_vel_y
-    boundary = 'solid_fluid_interface top bottom'
+    boundary = 'solid_fluid_interface'
     function = 0
   []
 
   [reflective_x]
     type = INSFVSymmetryVelocityBC
     variable = superficial_vel_x
-    boundary = left
+    boundary = fluid_left
     momentum_component = 'x'
     mu = ${mu}
     u = superficial_vel_x
@@ -365,7 +388,7 @@ advected_interp_method = 'average'
   [reflective_y]
     type = INSFVSymmetryVelocityBC
     variable = superficial_vel_y
-    boundary = left
+    boundary = fluid_left
     momentum_component = 'y'
     mu = ${mu}
     u = superficial_vel_x
@@ -374,7 +397,7 @@ advected_interp_method = 'average'
 
   [reflective_p]
     type = INSFVSymmetryPressureBC
-    boundary = left
+    boundary = fluid_left
     variable = pressure
   []
 
@@ -382,7 +405,7 @@ advected_interp_method = 'average'
     # symmetric problem
     type = FVNeumannBC
     variable = T_fluid
-    boundary = left
+    boundary = fluid_left
     value = 0
   []
 
@@ -391,6 +414,13 @@ advected_interp_method = 'average'
     variable = T_wall
     boundary = 'right top bottom'
     value = ${T_cold}
+  []
+
+  [T_reflective_wall]
+    type = FVNeumannBC
+    variable = T_wall
+    boundary = wall_left
+    value = 0
   []
 []
 
@@ -419,18 +449,21 @@ advected_interp_method = 'average'
     type = ConstantIC
     variable = T_fluid
     value = ${T_cold}
+    block = 'spacer_block porous_block'
   []
 
   [superficial_vel_x]
     type = ConstantIC
     variable = superficial_vel_x
     value = 0
+    block = 'spacer_block porous_block'
   []
 
   [superficial_vel_y]
     type = ConstantIC
     variable = superficial_vel_y
     value = 0
+    block = 'spacer_block porous_block'
   []
 []
 
@@ -462,8 +495,8 @@ advected_interp_method = 'average'
   [vol_heat_rate]
     # Function for volumetric heat rate that decaays to fraction f of its initial value by time T
     type = ParsedFunction
-    #expression = 'if(abs(y - 1.4993) < 0.01, if(abs(x - 0.1842) < 0.01, Q, 0), 0)'
-    expression = 'Q'
+    expression = 'if(abs(y - 1.4993) < 0.01, if(x < 0.01, Q, 0), 0)'
+    #expression = 'Q'
     symbol_names = 'Q'
     symbol_values = '${Q}'
   []
@@ -472,14 +505,8 @@ advected_interp_method = 'average'
 [Executioner]
   type = Transient
   scheme = implicit-euler
-  end_time = '${units 365 day -> s}'
-  dtmax = '${units 10 day -> s}'
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = '${units 1 day -> s}'
-  []
-  #steady_state_detection = true
-  #steady_state_tolerance = 1e-12
+  end_time = '${units 1 s}'
+  dt = ${units 0.1 s}
 
   solve_type = 'NEWTON'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'

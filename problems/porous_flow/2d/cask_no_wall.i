@@ -7,7 +7,8 @@ k_fluid = '${units 0.02 W/(m*K)}'
 cp_fluid = '${units 5.193 J/(kg*K)}'
 T_cold = '${units 293 K}'
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
-Q = '${units 0.05 kW -> W}' # Heat source amplitude
+#Q = '${units 0.05 kW -> W}' # Heat source amplitude
+Q = '${units 1.05 kW -> W}' # Heat source amplitude
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -22,15 +23,15 @@ advected_interp_method = 'average'
   [cmg]
     type = CartesianMeshGenerator
     dim = 2
-    dx = '0.3683 0.0127'
-    dy = '0.0127 0.2292 2.5146 0.2292 0.0127'
-    ix = '29 1'
-    iy = '1 18 200 18 1'
-    subdomain_id = '1 1
-                    1 1
-                    2 2
-                    1 1
-                    1 1
+    dx = '0.3683'
+    dy = '0.2292 2.5146 0.2292'
+    #ix = '29'
+    ix = '2'
+    #iy = '18 200 18'
+    iy = '2 3 2'
+    subdomain_id = '1
+                    2
+                    1
                     '
   []
 
@@ -41,8 +42,8 @@ advected_interp_method = 'average'
     new_block = 'spacer_block porous_block'
   []
 
-  coord_type = RZ
-  rz_coord_axis = Y
+  #coord_type = RZ
+  #rz_coord_axis = Y
 []
 
 [UserObjects]
@@ -353,13 +354,13 @@ advected_interp_method = 'average'
   [superficial_vel_x]
     type = ConstantIC
     variable = superficial_vel_x
-    value = 0
+    value = 1E-5
   []
 
   [superficial_vel_y]
     type = ConstantIC
     variable = superficial_vel_y
-    value = 0
+    value = 1E-5
   []
 []
 
@@ -391,19 +392,37 @@ advected_interp_method = 'average'
   []
 []
 
+[Postprocessors]
+  [dirichlet_heat_flux]
+    type = SideDiffusiveFluxIntegral
+    variable = T_fluid
+    boundary = 'top right bottom'
+    functor_diffusivity = ${k_fluid}
+  []
+  [neumann_heat_flux]
+    type = SideDiffusiveFluxIntegral
+    variable = T_fluid
+    boundary = left
+    functor_diffusivity = ${k_fluid}
+  []
+[]
+
 [Executioner]
   type = Transient
   scheme = implicit-euler
-  end_time = '${units 1 s}'
+  #end_time = '${units 1 s}'
+  end_time = '${units 0.1 s}'
   dt = ${units 0.1 s}
 
   solve_type = 'NEWTON'
+  #solve_type = 'LINEAR'
   petsc_options_iname = '-pc_type -pc_factor_shift_type -snes_linesearch_damping'
   petsc_options_value = 'lu NONZERO 1.0'
+  #petsc_options = '-ksp_view_pmat'
   line_search = none
   nl_rel_tol = 1e-10
   nl_abs_tol = 1e-10
-  automatic_scaling = true
+  automatic_scaling = false
 []
 
 [Outputs]

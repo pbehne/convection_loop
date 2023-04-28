@@ -8,7 +8,7 @@ k_steel = '${units 45 W/(m*k)}'
 cp_fluid = '${units 5.193 J/(kg*K)}'
 T_cold = '${units 293 K}'
 alpha = '${units ${fparse 1/T_cold} K^(-1)}' # natural convection coefficient = 1/T assuming ideal gas
-Q = '${units 0.05 kW -> W}' # Heat source amplitude
+Q = '${units 100.00 kW -> W}' # Heat source amplitude
 
 # numerical settings
 velocity_interp_method = 'rc'
@@ -50,28 +50,21 @@ advected_interp_method = 'average'
     type = SideSetsBetweenSubdomainsGenerator
     input = rename_block_name
     primary_block = porous_block
-    paired_block = 'wall_block'
-    new_boundary = 'solid_fluid_interface_1'
+    paired_block = wall_block
+    new_boundary = 'solid_fluid_interface'
   []
 
   [solid_fluid_interface_2]
     type = SideSetsBetweenSubdomainsGenerator
     input = solid_fluid_interface_1
     primary_block = spacer_block
-    paired_block = 'wall_block'
-    new_boundary = 'solid_fluid_interface_2'
-  []
-
-  [rename_interface]
-    type = RenameBoundaryGenerator
-    input = solid_fluid_interface_2
-    old_boundary = 'solid_fluid_interface_1 solid_fluid_interface_2'
-    new_boundary = 'solid_fluid_interface solid_fluid_interface'
+    paired_block = wall_block
+    new_boundary = 'solid_fluid_interface'
   []
 
   [wall_left_boundary_1]
     type = SideSetsFromBoundingBoxGenerator
-    input = rename_interface
+    input = solid_fluid_interface_2
     block_id = 0
     bottom_left = '0 0 0'
     top_right = '0.1 0.0127 0'
@@ -382,7 +375,7 @@ advected_interp_method = 'average'
   [T_cold_boundary]
     type = FVDirichletBC
     variable = T_fluid
-    boundary = 'solid_fluid_interface'
+    boundary = solid_fluid_interface
     value = ${T_cold}
   []
 []
@@ -406,18 +399,21 @@ advected_interp_method = 'average'
     type = ConstantIC
     variable = T_fluid
     value = ${T_cold}
+    block = 'spacer_block porous_block'
   []
 
   [superficial_vel_x]
     type = ConstantIC
     variable = superficial_vel_x
     value = 0
+    block = 'spacer_block porous_block'
   []
 
   [superficial_vel_y]
     type = ConstantIC
     variable = superficial_vel_y
     value = 0
+    block = 'spacer_block porous_block'
   []
 []
 
@@ -449,8 +445,8 @@ advected_interp_method = 'average'
   [vol_heat_rate]
     # Function for volumetric heat rate that decaays to fraction f of its initial value by time T
     type = ParsedFunction
-    #expression = 'if(abs(y - 1.4993) < 0.01, if(abs(x - 0.1842) < 0.01, Q, 0), 0)'
-    expression = 'Q'
+    expression = 'if(abs(y - 1.4993) < 0.01, if(x < 0.01, Q, 0), 0)'
+    #expression = 'Q'
     symbol_names = 'Q'
     symbol_values = '${Q}'
   []
@@ -475,6 +471,6 @@ advected_interp_method = 'average'
   exodus = true
 []
 
-#[Debug]
-#  show_var_residual_norms = true
-#[]
+[Debug]
+  show_var_residual_norms = true
+[]
