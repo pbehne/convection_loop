@@ -15,20 +15,10 @@ ConvectionLoopApp::validParams()
 
 ConvectionLoopApp::ConvectionLoopApp(InputParameters parameters) : MooseApp(parameters)
 {
-  ConvectionLoopApp::registerAll(_factory, _action_factory, _syntax);
+  ModulesApp::registerAllObjects<ConvectionLoopApp>(_factory, _action_factory, _syntax);
 }
 
 ConvectionLoopApp::~ConvectionLoopApp() {}
-
-void
-ConvectionLoopApp::registerAll(Factory & f, ActionFactory & af, Syntax & syntax)
-{
-  ModulesApp::registerAll(f, af, syntax);
-  Registry::registerObjectsTo(f, {"ConvectionLoopApp"});
-  Registry::registerActionsTo(af, {"ConvectionLoopApp"});
-
-  /* register custom execute flags, action syntax, etc. here */
-}
 
 void
 ConvectionLoopApp::registerApps()
@@ -42,7 +32,7 @@ ConvectionLoopApp::registerApps()
 extern "C" void
 ConvectionLoopApp__registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
-  ConvectionLoopApp::registerAll(f, af, s);
+  ModulesApp::registerAllObjects<ConvectionLoopApp>(f, af, s);
 }
 extern "C" void
 ConvectionLoopApp__registerApps()

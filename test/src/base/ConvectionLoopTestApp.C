@@ -31,7 +31,7 @@ ConvectionLoopTestApp::~ConvectionLoopTestApp() {}
 void
 ConvectionLoopTestApp::registerAll(Factory & f, ActionFactory & af, Syntax & s, bool use_test_objs)
 {
-  ConvectionLoopApp::registerAll(f, af, s);
+  ModulesApp::registerAllObjects<ConvectionLoopApp>(f, af, s);
   if (use_test_objs)
   {
     Registry::registerObjectsTo(f, {"ConvectionLoopTestApp"});
