@@ -512,7 +512,7 @@ advected_interp_method = 'average'
   type = Transient
   scheme = implicit-euler
   end_time = '${units 365 day -> s}'
-  dtmax = '${units 10 days -> s}'
+  dtmax = '${units 10 day -> s}'
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = '${units 1 day -> s}'
