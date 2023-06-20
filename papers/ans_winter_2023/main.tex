@@ -55,7 +55,7 @@ This section describes the modeling and simulation tools utilized in this work a
 \subsection{Canister Geometry}
 
 The initial canister design utilizes the Department Of Energy (DOE) Standard Canister \cite{doe_canister} as a starting point for loading TRISO SNF in pebble form (Figure~\ref{fig:canister_geom}).
-The DOE Standard Canister is a family of four different canisters with a diameter of 18 in or 24 in and a height of 10 ft and 15 ft.
+The DOE Standard Canister is a family of four different canisters with a diameter of 18 in or 24 in and a height of 10 ft or 15 ft.
 For this analysis the 24 in x 10 ft DOE Standard Canister is utilized as the base model before increasing the diameter of the canister to 30 in to match that of the X-Energy spent nuclear fuel canister \cite{xenergy}.
 A theoretical canister configuration of pebbles containing TRISO particles is depicted in Figure~\ref{fig:canister_packing}.
 \begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
@@ -97,8 +97,7 @@ Both these assumptions are not presumed to significantly affect the number densi
 
 After fuel pebbles are cycled through a PBR they contain a large array of fission products.
 These fission products release energy in the form of heat through radioactive decay mechanisms.
-This heat generation drives many of the processes of interest when modeling spent fuel repositories, including: enhanced creep, corrosion, and degradation of canisters, water table movement, chemical reaction rates, recriticality, and geological barrier evolution.
-As an initial step towards modeling these processes, this work presents the development of a high-fidelity model for calculating the decay heat and its movement within a canister.
+The movement of decays heat within a canister is captured using a high-fidelity model.
 
 Simulating the effect of spent PBR fuel on a surrounding geological repository requires resolution of the physics within each fuel canister to use as the repository source term.
 Each modeled canister physics is now briefly described: Neutronics is the physics of radiation transport in time, space, and energy.
@@ -107,6 +106,7 @@ Thermal hydraulics combines heat conduction, fluid mechanics, and thermodynamics
 Because neutronics are strongly affected by material properties called cross sections, and cross sections are strongly affected by material temperature, the neutronics and thermal hydraulics aspects of the canister must be solved iteratively until the cross sections and temperatures converge to a consistent solution.
 This physics coupling is accomplished using the MultiApp and Transfer systems within MOOSE \cite{multiapp}.
 
+\blue{Need to couple in neutronics, update this part!}
 Canister simulations performed thus far have focused on the thermal hydraulics aspect of the physics.
 Because the high-fidelity PBR burnup calculation that provides the source term for spent fuel in the canister has just been completed, canister radiation has not yet been modeled and arbitrary heat sources are used as placeholders.
 These heat sources will be updated with results from the burnup calculation before this summary is finalized.
@@ -136,7 +136,7 @@ The thermal hydraulic results are in agreement with the literature and the neutr
 \begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
   \centering
   \includegraphics{figs/gpbr_neutronics}
-  \caption{GPBR200 neutronics results}
+  \caption{GPBR200 neutronics results.}
   \label{fig:gpbr_neutronics}
 \end{figure}
 
@@ -153,10 +153,10 @@ The colorbar indicates temperature and the vector field indicates velocity.}
 \section{Conclusions}
 
 These preliminary heat generation and flow results are only the first steps towards a high-fidelity, multiscale, multiphysics simulation of the internal state of canisters.
-Other relevant physics include thermomechanics to model the degradation of the storage canisters over time, and mass transfer to model the leakage of any radioactive materials from the canisters into the geological repository.
+Other relevant physics include: enhanced creep, corrosion and degradation of canisters, water table movement, chemical reaction rates, recriticality, geological barrier evolution, and mass transfer to model the leakage of any radioactive materials from the canisters into the geological repository.
 The results from these cansiter simulations can then be used as source terms/boundary condition inputs into future simulations of the geological repository.
-The next steps are to incorporate the isotopic information from the high-fidelity burn-up calculations, neutronics, further depletion, three-dimensional effects, energy movement through the system and to the surrounding geological material, and ultimately coupling to the larger geological repository calculation.
-By the end of the project we will be embedding hundreds of these high-fidelity calculations within field-scale geological repository calculations for multiscale simulation of repository performance. 
+The next steps are to incorporate the \red{isotopic information from the high-fidelity burn-up calculations, neutronics, further depletion}, three-dimensional effects, energy movement through the system and to the surrounding geological material, and ultimately coupling to the larger geological repository calculation.
+Future goals will be to embed hundreds of these high-fidelity calculations within field-scale geological repository calculations for multiscale simulation of repository performance. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
