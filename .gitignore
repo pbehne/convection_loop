@@ -1,8 +1,9 @@
+*.h5
 .libs
 *.la
 *.lo
 *.d
-*.o
+*.o*
 *.a
 *-opt
 *-optimized

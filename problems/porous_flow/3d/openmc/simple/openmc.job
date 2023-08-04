@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -N openmc
+#PBS -j oe
+#PBS -k doe
+#PBS -l walltime=00:10:00
+#PBS -l select=1:ncpus=48:mpiprocs=2
+#PBS -P hpc
+
+export PATH=$HOME/mambaforge3/bin:$PATH
+source activate $HOME/mambaforge3/envs/openmc
+
+export OMP_NUM_THREADS=1
+
+cd /home/behnpa/projects/convection_loop/problems/porous_flow/3d/openmc/simple
+#python simple.py
+mpiexec -n 2 openmc
