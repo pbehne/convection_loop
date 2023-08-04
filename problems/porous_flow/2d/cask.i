@@ -515,9 +515,14 @@ advected_interp_method = 'average'
 [Executioner]
   type = Transient
   scheme = implicit-euler
+<<<<<<< Updated upstream
   #end_time = '${units 365 day -> s}'
   #dtmax = '${units 10 day -> s}'
   end_time = '${units 600 s}'
+=======
+  end_time = '${units 365 day -> s}'
+  dtmax = '${units 10 day -> s}'
+>>>>>>> Stashed changes
   [TimeStepper]
     type = IterationAdaptiveDT
     #dt = '${units 1 day -> s}'
