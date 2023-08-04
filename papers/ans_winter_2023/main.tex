@@ -1,0 +1,172 @@
+\documentclass{anstrans}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Coupled Neutronics, Heat-Conduction, and Natural Convection for High-Fidelity Simulation of Pebble-Bed Spent Fuel Canisters}
+\author{Patrick Behne,$^{*}$ and Derek Gaston$^{*}$}
+
+\institute{
+$^{*}$Computational Frameworks Group, Idaho National Laboratory, 1955 N. Fremont Ave.
+Idaho Falls, ID 83415, patrick.behne@inl.gov, derek.gaston@inl.gov
+}
+
+%%%% packages and definitions (optional)
+\usepackage{graphicx} % allows inclusion of graphics
+\usepackage{booktabs} % nice rules (thick lines) for tables
+\usepackage{microtype} % improves typography for PDF
+\usepackage{xcolor}
+
+\newcommand{\SN}{S$_N$}
+\renewcommand{\vec}[1]{\bm{#1}} %vector is bold italic
+\newcommand{\vd}{\bm{\cdot}} % slightly bold vector dot
+\newcommand{\grad}{\vec{\nabla}} % gradient
+\newcommand{\ud}{\mathop{}\!\mathrm{d}} % upright derivative symbol
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+Advanced nuclear reactors will play a substantial role in the green, sustainable energy future of the United States.
+While many studies are ongoing to design new fuel types and reactor designs, relatively little attention is being paid to the back end of the fuel cycle: how the spent nuclear fuel (SNF) will be transported and disposed of.
+Learning from the past, a plan is needed for disposal of SNF from advanced reactors before their deployment.
+The leading idea for disposal of SNF involves encasing it within specially designed ``canisters'', which are placed in deep underground repositories for final disposition.
+Repository disposal of fuel is complicated by the enormous amount of time required for operation, millions of years, where a myriad of issues could impact the repository's safety.
+During operation, essential questions arise about repository viability for disposal of SNF, including the likelihood and potential impacts on surface effects from a sub-surface criticality event.
+Answering these questions for advanced reactor SNF requires the development of a first-of-a-kind multiphysics, multiscale modeling capability that includes the effect of embedded, coupled neutronics, fluid dynamics, heat transfer, groundwater flow, and species transport for transient simulations.
+
+This summary addresses one of the initial steps towards the repository simulation capability described above: a coupled neutronics and thermal hydraulics transient simulator for SNF canisters.
+TRI-structural ISOtropic (TRISO) fuel used in gas-cooled pebble-bed reactors (PBRs) is chosen as the advanced fuel type to simulate.
+\blue{Can remove this next part if needed, but I like it.}
+\red{
+Over the last two decades, most research has tended toward predicting TRISO fuel properties in reactors \cite{nureg, epri}, necessary to support the eventual licensing of next-generation gas-cooled reactors by the Nuclear Regulatory Commission (NRC).
+Full consideration of post-closure repository disposal performance implications is lacking and limited to arguably dated assumptions \cite{gt-mhr, PETERSON2011}.
+}
+The new simulation capability utilizes simulation tools based on the Multiphysics Object-Oriented Simulation Environment (MOOSE) developed by Idaho National Laboratory \cite{moose}.
+Using a single framework to perform a high-fidelity depletion calculation and stochastically place depleted pebbles into a canister on which neutronics and thermal hydraulics are performed greatly streamlines the modeling and simulation process.
+The MOOSE framework is already in use by the NRC and advanced reactor vendors and greatly accelerates the licensing and design process by providing an end-to-end solution.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Background and Approach}
+
+This section describes the modeling and simulation tools utilized in this work as well as assumed parameter values.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Canister Geometry}
+
+The initial canister design utilizes the Department Of Energy (DOE) Standard Canister \cite{doe_canister} as a starting point for loading TRISO SNF in pebble form (Figure~\ref{fig:canister_geom}).
+The DOE Standard Canister is a family of four different canisters with a diameter of 18 in or 24 in and a height of 10 ft or 15 ft.
+For this analysis the 24 in x 10 ft DOE Standard Canister is utilized as the base model before increasing the diameter of the canister to 30 in to match that of the X-Energy spent nuclear fuel canister \cite{xenergy}.
+A theoretical canister configuration of pebbles containing TRISO particles is depicted in Figure~\ref{fig:canister_packing}.
+\begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
+  \centering
+  \includegraphics{figs/canister_geom}
+  \caption{DOE Standard Canister depiction and dimensional data.}
+  \label{fig:canister_geom}
+\end{figure}
+\begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
+  \centering
+  \includegraphics{figs/canister_packing}
+  \caption{Theoretical canister configuration of pebbles containing TRISO particles.}
+  \label{fig:canister_packing}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Canister Source Term}
+
+One of the important advancements by this work is the use of high-fidelity simulation to obtain the isotopic compositions of the fuel pebbles discharged after they reach maximum burnup.
+Conventional tools for depletion analysis are not suitable for this purpose because of the movement of the pebbles through the pebble-bed.
+For this reason, the Griffin (a MOOSE-based application for radiation transport) \cite{griffin} team developed a custom solver that allows tracking the isotopics in pebbles as they move through the core exposing them to different power levels and neutron spectra.
+The temperature at which every pebble burns changes the local spectrum.
+Therefore, the problem must be solved coupled with the thermal hydraulics to obtain detailed information about the fuel and moderator temperatures during the depletion.
+For this reason, the MOOSE-based applications Griffin, Pronghorn \cite{pronghorn}, and BISON \cite{bison} are coupled together to achieve predictive depletion simulation.
+Pronghorn uses a porous media approximation to simulate the interaction between the coolant and the pebbles while BISON calculates the temperature within the pebbles and an average representative TRISO based on the burnup of the selected pebble. 
+
+The general 200 MW PBR (GPBR200) model is based on open literature data but is similar to the designs considered for domestic deployment and is the prototype reactor used for the SNF canister source term.
+The depletion model assumes fresh fuel with 15.5\% enriched fuel pebbles.
+Pebbles are discharged once they reach a burnup of 164 MWd/kgHM, passing through the core on average six times.
+The calculation tracks the evolution of 295 isotopes plus 20 dummy isotopes (representative of isotopes with negligible cross-section but with significant decay heat) to calculate decay heat produced.
+The model geometry and components are described in Figure~\ref{fig:gpbr_mesh}.
+The streamlines (the path that the pebbles follow) are approximated as straight lines instead of curving into the bypass flow.
+This has been taken into account reducing the total mass flow rate.
+Both these assumptions are not presumed to significantly affect the number density of the discharged fuel.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Canister Simulation}
+
+After fuel pebbles are cycled through a PBR they contain a large array of fission products.
+These fission products release energy in the form of heat through radioactive decay mechanisms.
+The movement of decays heat within a canister is captured using a high-fidelity model.
+
+Simulating the effect of spent PBR fuel on a surrounding geological repository requires resolution of the physics within each fuel canister to use as the repository source term.
+Each modeled canister physics is now briefly described: Neutronics is the physics of radiation transport in time, space, and energy.
+Solving neutronics for the distribution of radiation within the canister allows one to compute the deacy heat source term to use in the thermal hydraulics calculation.
+Thermal hydraulics combines heat conduction, fluid mechanics, and thermodynamics to determine the distribution of temperature, fluid velocity, and pressure within each canister.
+Because neutronics are strongly affected by material properties called cross sections, and cross sections are strongly affected by material temperature, the neutronics and thermal hydraulics aspects of the canister must be solved iteratively until the cross sections and temperatures converge to a consistent solution.
+This physics coupling is accomplished using the MultiApp and Transfer systems within MOOSE \cite{multiapp}.
+
+\blue{Need to couple in neutronics, update this part!}
+Canister simulations performed thus far have focused on the thermal hydraulics aspect of the physics.
+Because the high-fidelity PBR burnup calculation that provides the source term for spent fuel in the canister has just been completed, canister radiation has not yet been modeled and arbitrary heat sources are used as placeholders.
+These heat sources will be updated with results from the burnup calculation before this summary is finalized.
+Present heat sources are modeled by sampling points within the spent fuel canister.
+Utilizing the extreme flexibility of MOOSE, point heat sources are placed at each sample point to represent the decay heat from each fuel pebble.
+To account for the effect that pebble packing has on the gas flow, the porous incompressible Navier-Stokes equations are used to model thermal hydraulics in the canister.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results and Analysis}
+
+In Figure~\ref{fig:gpbr_th} and Figure~\ref{fig:gpbr_neutronics} some of the thermal hydraulic and neutronic results obtained from the GPBR200 depleion model are shown.
+The thermal hydraulic results are in agreement with the literature and the neutronic results show the characteristic behavior expected by a thermal graphite moderated reactor.
+\begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
+  \centering
+  \includegraphics{figs/gpbr_mesh}
+  \caption{GPBR200 mesh and model description.}
+  \label{fig:gpbr_mesh}
+\end{figure}
+\begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
+  \centering
+  \includegraphics{figs/gpbr_th}
+  \caption{GPBR200 thermal hydraulic results.}
+  \label{fig:gpbr_th}
+\end{figure}
+\begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
+  \centering
+  \includegraphics{figs/gpbr_neutronics}
+  \caption{GPBR200 neutronics results.}
+  \label{fig:gpbr_neutronics}
+\end{figure}
+
+Canister results are shown in Figure~\ref{fig:canister_soln}.
+\begin{figure}[ht] % replace 't' with 'b' to force it to be on the bottom
+  \centering
+  \includegraphics[scale=0.5]{figs/canister_soln}
+  \caption{2D axisymmetric porous flow canister simulation using 2,000 randomly placed pebbles as source terms.
+The colorbar indicates temperature and the vector field indicates velocity.}
+  \label{fig:canister_soln}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions}
+
+These preliminary heat generation and flow results are only the first steps towards a high-fidelity, multiscale, multiphysics simulation of the internal state of canisters.
+Other relevant physics include: enhanced creep, corrosion and degradation of canisters, water table movement, chemical reaction rates, recriticality, geological barrier evolution, and mass transfer to model the leakage of any radioactive materials from the canisters into the geological repository.
+The results from these cansiter simulations can then be used as source terms/boundary condition inputs into future simulations of the geological repository.
+The next steps are to incorporate the \red{isotopic information from the high-fidelity burn-up calculations, neutronics, further depletion}, three-dimensional effects, energy movement through the system and to the surrounding geological material, and ultimately coupling to the larger geological repository calculation.
+Future goals will be to embed hundreds of these high-fidelity calculations within field-scale geological repository calculations for multiscale simulation of repository performance. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\section{Appendix}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Acknowledgments}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{ans}
+\bibliography{bibliography}
+\end{document}
+
